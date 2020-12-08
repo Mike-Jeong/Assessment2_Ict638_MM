@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Comment -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#fffff9c4"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/AtextName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Agency Name"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/Aname"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:padding="10dp"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/AtextPhonenumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone number"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/APhonenumber"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:padding="10dp"
+        android:textColor="@android:color/black"/>
+
+
+    <TextView
+        android:id="@+id/AtextEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/Aemail"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:padding="10dp"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/AAgencylocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Office location "
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/Alocation"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:padding="10dp"
+        android:textColor="@android:color/black"/>
+
+       
+      
+
+
+    <FrameLayout
+        android:id="@+id/mapAFrgContainer"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
+
+    <LinearLayout
+        android:id="@+id/ALin2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="5dp"
+        android:weightSum="6">
+
+
+        <Button
+            android:id="@+id/btnAShare"
+            android:text="Share Agency detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:layout_weight="2"/>
+
+        <Button
+            android:id="@+id/btnASMS"
+            android:text="Wanna see other houses?"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:layout_weight="2"/>
+
+         <Button
+            android:id="@+id/btnAhouses"
+            android:text="Other houses location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:layout_weight="2"/>
+    </LinearLayout>
+
+
+</LinearLayout>

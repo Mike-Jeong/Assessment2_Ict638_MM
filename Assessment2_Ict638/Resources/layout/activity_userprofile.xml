@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/ProfilelinearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/PtextName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"/>
+
+        <EditText 
+            android:id="@+id/Pname"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:padding="10dp"
+            android:hint="Last Name, First Name"/>
+
+        <TextView
+            android:id="@+id/PtextPhonenumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone number"/>
+
+        <EditText
+            android:id="@+id/PPhonenumber"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:padding="10dp"
+            android:hint="0211231234"/>
+        
+
+        <TextView
+            android:id="@+id/PtextEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"/>
+
+        <TextView
+            android:id="@+id/Pemail"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/PtextCountry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Country"/>
+
+        <EditText
+            android:id="@+id/PCountry"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/PUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="User Name"
+        />
+        <TextView
+            android:id="@+id/Pusername"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/PtextPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password"/>
+
+        <TextView
+            android:id="@+id/Ppassword"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:padding="10dp"
+            android:inputType="textPassword"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ProfilelinearLayout2"
+        android:layout_below="@id/ProfilelinearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+      
+        <Button
+            android:id="@+id/btnPModify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Modify"/>
+        
+        <Button
+            android:id="@+id/btnPLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Logout"/>
+        
+        <Button
+            android:id="@+id/btnPCloc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Check My Location"/>
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
+
