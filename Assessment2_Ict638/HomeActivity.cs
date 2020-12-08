@@ -13,7 +13,9 @@ using Newtonsoft.Json;
 using Assessment2_Ict638.Models;
 
 namespace Assessment2_Ict638
-{
+{/// <summary>
+/// //
+/// </summary>
     [Activity(Label = "HomeActivity")]
     public class HomeActivity : Activity
     {
