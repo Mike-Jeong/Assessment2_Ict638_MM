@@ -107,7 +107,7 @@ namespace Assessment2_Ict638
 
 
 
-
+        //May delete the logout in profile
 
         private void BtnPLogout_Click(object sender, EventArgs e)
         {

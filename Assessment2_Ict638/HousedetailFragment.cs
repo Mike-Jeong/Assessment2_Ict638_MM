@@ -7,12 +7,15 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
+using Assessment2_Ict638.Models;
+using Android.Gms.Common;
 
 namespace Assessment2_Ict638
 {/// <summary>
@@ -31,6 +34,8 @@ namespace Assessment2_Ict638
         string l;
         string an;
         string d;
+        List<Data> dList = new List<Data>();
+
 
 
         public HousedetailFragment(string heading, string numberofroom, string numberoftoilet, string rentfee, string location, string agencyname, string description) 
@@ -101,19 +106,16 @@ namespace Assessment2_Ict638
             }
 
         }
+
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
-          
-        
-
-
             // Create your fragment here
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
+
             // Use this to return your custom view for this Fragment
             View v = inflater.Inflate(Resource.Layout.fragment_housedetail, container, false);
 
@@ -124,6 +126,8 @@ namespace Assessment2_Ict638
             TextView nAgency = v.FindViewById<EditText>(Resource.Id.HtvAgency);
             TextView ALocation = v.FindViewById<EditText>(Resource.Id.HtvLocation);
             TextView Description = v.FindViewById<EditText>(Resource.Id.HtvDescription);
+
+            
 
             Heading.Text = h;
             Numberofroom.Text = nr;
@@ -138,12 +142,16 @@ namespace Assessment2_Ict638
             ImageView imgMapFrag = v.FindViewById<ImageView>(Resource.Id.imgHMapFrag);
             imgMapFrag.SetImageResource(id);
 
+            FrameLayout mapFragContainer = v.FindViewById<FrameLayout>(Resource.Id.mapFrgContainer);
+
             var mapFrag = MapFragment.NewInstance();
             ChildFragmentManager.BeginTransaction()
                 .Add(Resource.Id.mapFrgContainer, mapFrag, "map")
                 .Commit();
 
             mapFrag.GetMapAsync(this);
+
+
 
            
             Button btnShare = v.FindViewById<Button>(Resource.Id.btnShare);
@@ -155,15 +163,24 @@ namespace Assessment2_Ict638
 
             return v;
         }
+        private void putData()
+        {
+            String url = "https://10.0.2.2:5001/api/Data";
+            string response = APIConnect.Get(url);
+            dList = JsonConvert.DeserializeObject<List<Data>>(response);
+
+
+        }
 
         private async void BtnSMS_Click(object sender, EventArgs e)
         {
             //To use this, delete async
             //throw new NotImplementedException();
+            
 
             try
-            {
-                string text = " ";
+            { 
+                string text = "Hi, I am interested in the house at"+location+"you have posted for rent. Could I please have more details?";
                 string recipient = "0211231234";
                 var message = new SmsMessage(text, new[] { recipient });
                 await Sms.ComposeAsync(message);
@@ -193,6 +210,7 @@ namespace Assessment2_Ict638
 
         public void OnMapReady(GoogleMap googleMap)
         {
+            gMap = googleMap;
             googleMap.MapType = GoogleMap.MapTypeNormal;
             googleMap.UiSettings.ZoomControlsEnabled = true;
             googleMap.UiSettings.CompassEnabled = true;

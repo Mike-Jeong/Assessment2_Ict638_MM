@@ -39,7 +39,7 @@ namespace Assessment2_Ict638
         string agencyname;
         string description;
 
-
+        [Obsolete]
         public bool OnNavigationItemSelected(IMenuItem item)
         {
             FrameLayout navFragContainer = FindViewById<FrameLayout>(Resource.Id.navFragContainer);
@@ -60,7 +60,9 @@ namespace Assessment2_Ict638
                     return true;
 
                 case Resource.Id.menu2:
+                    //need to change users to agency (not list agency)
                     
+
                     bool staus = false;
                     string url = "https://10.0.2.2:5001/api/Users";
                     string response = APIConnect.Get(url);

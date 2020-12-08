@@ -89,7 +89,7 @@ namespace Assessment2_Ict638
 
             try
             {
-                string text = " ";
+                string text = "Hi, I am"+fisrtname,lastname+"saw your details on the Rent-a-go app. Could you please send me details of more houses for rent in the same price range?";
                 string recipient = "0211231234";
                 var message = new SmsMessage(text, new[] { recipient });
                 await Sms.ComposeAsync(message);
