@@ -19,7 +19,7 @@ namespace Assessment2_Ict638
     public class AgencydetailFragment : Fragment, IOnMapReadyCallback
     {
         GoogleMap gMap;
-        LatLng lasLoc;
+        
        
         string An;
         string Ap;
@@ -118,6 +118,7 @@ namespace Assessment2_Ict638
 
         public void OnMapReady(GoogleMap googleMap)
         {
+            gMap = googleMap;
             googleMap.MapType = GoogleMap.MapTypeNormal;
             googleMap.UiSettings.ZoomControlsEnabled = true;
             googleMap.UiSettings.CompassEnabled = true;
@@ -240,13 +241,13 @@ namespace Assessment2_Ict638
                 if (location != null)
                 {
                     Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}");
-                    
+                    CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
                     builder.Target(new LatLng(location.Latitude, location.Longitude));
                     builder.Zoom(20);
                     builder.Bearing(155);
                     builder.Tilt(80);
 
-                   
+
 
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.SetPosition(new LatLng(location.Latitude, location.Longitude));

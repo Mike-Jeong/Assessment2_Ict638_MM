@@ -54,20 +54,10 @@ namespace Assessment2_Ict638
             mRecycleView.SetLayoutManager(mLayoutManager);
             mRecycleView.SetAdapter(mAdapter);
 
-            Button btnuserprofile = FindViewById<Button>(Resource.Id.btnuserprofile);
-            btnuserprofile.Click += Btnuserprofile_Click; ;
 
         }
 
-        private void Btnuserprofile_Click(object sender, EventArgs e)
-        {
-            Intent newActivity = new Intent(this, typeof(ProfileActivity));
-            Bundle bundle = Intent.GetBundleExtra("data");
-            newActivity.PutExtra("data", bundle);
-           
-
-            StartActivity(newActivity);
-        }
+        // delete button profile
 
         private void MAdapter_ItemClick(object sender, int e)
         {
@@ -92,6 +82,40 @@ namespace Assessment2_Ict638
 
 
         }
+        /*
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.menu_main, menu);
+            return base.OnCreateOptionsMenu(menu);
+        }*/
+
+        /*
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            switch (item.ItemId)
+            {
+                case Resource.Id.menuLogout:
+                    {
+                        Intent newActivity = new Intent(this, typeof(HomeActivity));
+                        StartActivity(newActivity);
+                        return true;
+                    }
+                case Resource.Id.menuProfileEdit:
+                    {
+                        //data or user 
+                        Intent newActivity = new Intent(this, typeof(ProfileActivity));
+                        Bundle bundle = Intent.GetBundleExtra("user");
+                        newActivity.PutExtra("user", bundle);
+
+
+                        StartActivity(newActivity);
+                        return true;
+                    }
+               
+            }
+
+            return base.OnOptionsItemSelected(item);
+        }*/
 
 
     }

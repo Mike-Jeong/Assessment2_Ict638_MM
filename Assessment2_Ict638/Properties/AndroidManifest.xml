@@ -11,8 +11,8 @@
 
   <!-- Permission to receive remote notifications from Google Play Services -->
   <!-- Notice here that we have the package name of our application as a prefix on the permissions. -->
-  <uses-permission android:name="com.companyname.test.permission.MAPS_RECEIVE" />
-  <permission android:name="com.companyname.test.permission.MAPS_RECEIVE" android:protectionLevel="signature" />
+  <uses-permission android:name="com.companyname.assessment2_ict638.permission.MAPS_RECEIVE" />
+  <permission android:name="com.companyname.assessment2_ict638.permission.MAPS_RECEIVE" android:protectionLevel="signature" />
 
   <!-- These are optional, but recommended. They will allow Maps to use the My Location provider. -->
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

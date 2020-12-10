@@ -134,7 +134,7 @@ namespace Assessment2_Ict638
             
         }
 
-        [Obsolete]
+       
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -143,11 +143,15 @@ namespace Assessment2_Ict638
             SetContentView(Resource.Layout.activity_navigation);
 
             Bundle data = Intent.GetBundleExtra("data");
+            
+            string url = "https://10.0.2.2:5001/api/Agency";
+            string response = APIConnect.Get(url);
+            List<Agency> agencies = JsonConvert.DeserializeObject<List<Agency>>(response);
 
             BottomNavigationView navigationView = FindViewById<BottomNavigationView>(Resource.Id.TopNavBar);
             navigationView.SetOnNavigationItemSelectedListener(this);
 
-            FragmentTransaction transaction = FragmentManager.BeginTransaction();
+            //FragmentTransaction transaction = FragmentManager.BeginTransaction();
 
             // sFrag. PutExtra("data", data);
             heading = "House name : " + data.GetString("heading");
@@ -158,13 +162,15 @@ namespace Assessment2_Ict638
             agencyname = "Agency name : " + data.GetString("agencyname");
             description = "Description " + data.GetString("description");
 
-
-            HousedetailFragment sFrag = new HousedetailFragment(heading, numberofroom, numberoftoilet, rentfee, location, agencyname, description);
-            sFrag.getph(data.GetInt("photoid"));
-          
-            
-
-            
+            foreach (Agency agency in agencies)
+            {
+                if (agency.agencyname == data.GetString("agencyname"))
+                {
+                    HousedetailFragment sFrag = new HousedetailFragment(heading, numberofroom, numberoftoilet, rentfee, location, agencyname, description, agency.agencylocation);
+                     sFrag.getph(data.GetInt("photoid"));
+                    break;
+                }
+            }
 
             navigationView.SelectedItemId = Resource.Id.menu1;
             

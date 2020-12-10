@@ -24,7 +24,7 @@ namespace Assessment2_Ict638
     public class HousedetailFragment : Fragment, IOnMapReadyCallback
     {
         GoogleMap gMap;
-        LatLng curLocation;
+        
         int photonum;
         int id;
         string h;
@@ -35,26 +35,26 @@ namespace Assessment2_Ict638
         string an;
         string d;
         string anum;
-        
-      
 
 
 
-        public HousedetailFragment(string heading, string numberofroom, string numberoftoilet, string rentfee, string location, string agencyname, string description, string agencyphonenumber) 
+
+
+        public HousedetailFragment(string heading, string numberofroom, string numberoftoilet, string rentfee, string location, string agencyname, string description, string agencyphonenumber)
         {
             h = heading; nr = numberofroom; nt = numberoftoilet; r = rentfee; l = location; an = agencyname; d = description; anum = agencyphonenumber;
 
         }
 
-        
 
 
 
 
-        public void getph(int n) 
+
+        public void getph(int n)
         {
             photonum = n;
-           
+
             switch (photonum)
             {
                 case 1:
@@ -133,7 +133,7 @@ namespace Assessment2_Ict638
             TextView ALocation = v.FindViewById<EditText>(Resource.Id.HtvLocation);
             TextView Description = v.FindViewById<EditText>(Resource.Id.HtvDescription);
 
-            
+
 
             Heading.Text = h;
             Numberofroom.Text = nr;
@@ -159,7 +159,7 @@ namespace Assessment2_Ict638
 
 
 
-           
+
             Button btnShare = v.FindViewById<Button>(Resource.Id.btnShare);
             Button btnSMS = v.FindViewById<Button>(Resource.Id.btnSMS);
 
@@ -169,18 +169,18 @@ namespace Assessment2_Ict638
 
             return v;
         }
-       
+
 
         private async void BtnSMS_Click(object sender, EventArgs e)
         {
             //To use this, delete async
             //throw new NotImplementedException();
-            
+
 
             try
-            { 
-                string text = "Hi, I am interested in the house at"+l+"you have posted for rent. Could I please have more details?";
-                string recipient = anum ;
+            {
+                string text = "Hi, I am interested in the house at" + l + "you have posted for rent. Could I please have more details?";
+                string recipient = anum;
                 var message = new SmsMessage(text, new[] { recipient });
                 await Sms.ComposeAsync(message);
             }
@@ -192,7 +192,7 @@ namespace Assessment2_Ict638
         private async void BtnShare_Click(object sender, EventArgs e)
         {
             string locDetails = "";
-            locDetails =h+nr+nt+r+l ;
+            locDetails = h + nr + nt + r + l;
             await ShareText(locDetails);
         }
 
@@ -295,7 +295,7 @@ namespace Assessment2_Ict638
 
 
 
-    }
+
 
 
         public async void getLastLocation(GoogleMap googleMap)
@@ -359,7 +359,7 @@ namespace Assessment2_Ict638
             catch (FeatureNotSupportedException fnsEx)
             {
                 // Handle not supported on device exception
-                Toast.MakeText(Activity, "Feature Not Supported", ToastLength.Short);
+                // Toast.MakeText(Activity, "Feature Not Supported", ToastLength.Short);
             }
             //catch (FeatureNotEnabledException fneEx)
             //{
@@ -374,10 +374,11 @@ namespace Assessment2_Ict638
             catch (Exception ex)
             {
                 // Unable to get location
-                Toast.MakeText(Activity, "Unable to get location", ToastLength.Short);
+                //Toast.MakeText(Activity ,"Unable to get location", ToastLength.Short);
             }
 
         }
+
 
         //public async void getCurrentLoc(GoogleMap googleMap)
         //{
@@ -443,6 +444,7 @@ namespace Assessment2_Ict638
         //        getLastLocation(googleMap);
         //    }
         //}
+
 
 
     }

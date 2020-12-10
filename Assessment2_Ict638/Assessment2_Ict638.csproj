@@ -198,9 +198,6 @@
     <AndroidResource Include="Resources\layout\fragment_housedetail.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\menu\menu_main.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\menu\menu_navigation.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
