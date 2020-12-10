@@ -113,7 +113,7 @@ namespace Assessment2_Ict638
 
                     foreach (Agency agency in agencies)
                     {
-                        if (agency.agencyname == data.GetString("agencyname")&&ausers.id == data.GetInt("id"))
+                        if (agency.agencyname == data.GetString("agencyname")&&ausers.id == data.GetInt("id")&&agency.agencyname ==agencyname)
                         {
                             //need to call house location and 
                             status = true;

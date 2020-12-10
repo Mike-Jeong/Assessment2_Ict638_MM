@@ -122,6 +122,11 @@ namespace Assessment2_Ict638
             googleMap.UiSettings.ZoomControlsEnabled = true;
             googleMap.UiSettings.CompassEnabled = true;
 
+            getLastLocation(googleMap);
+            getLocation(googleMap);
+
+
+
             //LatLng loc = new LatLng(lasLoc);
             //CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
             //builder.Target(loc);
@@ -144,71 +149,67 @@ namespace Assessment2_Ict638
             Console.WriteLine("Test - LastLoc");
             try
             {
-                //var location = await Geolocation.GetLastKnownLocationAsync();
-                //if (location != null)
-                //{
-                //    Console.WriteLine($"Last Loc - Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
-                //    MarkerOptions curLoc = new MarkerOptions();
-                //    curLoc.SetPosition(new LatLng(location.Latitude, location.Longitude));
-                //    var address = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude);
-                //    var placemark = address?.FirstOrDefault();
-                //    var geocodeAddress = "";
-                //    if (placemark != null)
-                //    {
-                //        geocodeAddress =
-                //        $"AdminArea: {placemark.AdminArea}\n" +
-                //        $"CountryCode: {placemark.CountryCode}\n" +
-                //        $"CountryName: {placemark.CountryName}\n" +
-                //        $"FeatureName: {placemark.FeatureName}\n" +
-                //        $"Locality: {placemark.Locality}\n" +
-                //        $"PostalCode: {placemark.PostalCode}\n" +
-                //        $"SubAdminArea: {placemark.SubAdminArea}\n" +
-                //        $"SubLocality: {placemark.SubLocality}\n" +
-                //        $"SubThoroughfare: {placemark.SubThoroughfare}\n" +
-                //        $"Thoroughfare: {placemark.Thoroughfare}\n";
 
-                //    }
-                //    curLoc.SetTitle("You were here" + geocodeAddress);
-                //    curLoc.SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueAzure));
-                //    googleMap.AddMarker(curLoc);
-                //}
                 var address = Al;
                 var locations = await Geocoding.GetLocationsAsync(address);
-
-
-
                 var location = locations?.FirstOrDefault();
-                
+
                 if (location != null)
                 {
                     Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}");
-                    MarkerOptions lasLoc = new MarkerOptions();
-                    lasLoc.SetPosition(new LatLng(location.Latitude, location.Longitude));
                     CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
                     builder.Target(new LatLng(location.Latitude, location.Longitude));
                     builder.Zoom(20);
                     builder.Bearing(155);
                     builder.Tilt(80);
 
-
-
                     CameraPosition cameraPosition = builder.Build();
-
-
-
                     CameraUpdate cameraUpdate = CameraUpdateFactory.NewCameraPosition(cameraPosition);
 
+                    gMap.MoveCamera(cameraUpdate);
 
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.SetPosition(new LatLng(location.Latitude, location.Longitude));
+                    markerOptions.SetTitle(An);
 
-                    googleMap.MoveCamera(cameraUpdate);
+                    googleMap.AddMarker(markerOptions);
+
+                    //var location = await Geolocation.GetLastKnownLocationAsync();
+                    //if (location != null)
+                    //{
+                    //    Console.WriteLine($"Last Loc - Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
+                    //    MarkerOptions curLoc = new MarkerOptions();
+                    //    curLoc.SetPosition(new LatLng(location.Latitude, location.Longitude));
+                    //    var address = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude);
+                    //    var placemark = address?.FirstOrDefault();
+                    //    var geocodeAddress = "";
+                    //    if (placemark != null)
+                    //    {
+                    //        geocodeAddress =
+                    //        $"AdminArea: {placemark.AdminArea}\n" +
+                    //        $"CountryCode: {placemark.CountryCode}\n" +
+                    //        $"CountryName: {placemark.CountryName}\n" +
+                    //        $"FeatureName: {placemark.FeatureName}\n" +
+                    //        $"Locality: {placemark.Locality}\n" +
+                    //        $"PostalCode: {placemark.PostalCode}\n" +
+                    //        $"SubAdminArea: {placemark.SubAdminArea}\n" +
+                    //        $"SubLocality: {placemark.SubLocality}\n" +
+                    //        $"SubThoroughfare: {placemark.SubThoroughfare}\n" +
+                    //        $"Thoroughfare: {placemark.Thoroughfare}\n";
+
+                    //    }
+                    //    curLoc.SetTitle("You were here" + geocodeAddress);
+                    //    curLoc.SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueAzure));
+                    //    googleMap.AddMarker(curLoc);
+                    //}
 
                 }
             }
-            //catch (FeatureNotSupportedException fnsEx)
-            //{
-            //    // Handle not supported on device exception
-            //    Toast.MakeText(Activity, "Feature Not Supported", ToastLength.Short);
-            //}
+            catch (FeatureNotSupportedException fnsEx)
+            {
+                // Handle not supported on device exception
+                Toast.MakeText(Activity, "Feature Not Supported", ToastLength.Short);
+            }
             //catch (FeatureNotEnabledException fneEx)
             //{
             //    // Handle not enabled on device exception
@@ -219,63 +220,75 @@ namespace Assessment2_Ict638
             //    // Handle permission exception
             //    Toast.MakeText(Activity, "Needs more permission", ToastLength.Short);
             //}
-            //catch (Exception ex)
-            //{
-            //    // Unable to get location
-            //    Toast.MakeText(Activity, "Unable to get location", ToastLength.Short);
-            //}
-            catch (FeatureNotSupportedException fnsEx)
-            {
-                // Feature not supported on device
-            }
             catch (Exception ex)
             {
-                // Handle exception that may have occurred in geocoding
+                // Unable to get location
+                Toast.MakeText(Activity, "Unable to get location", ToastLength.Short);
             }
+
         }
 
-        public async void getCurrentLoc(GoogleMap googleMap)
+        public async void getLocation(GoogleMap googleMap)
         {
-            Console.WriteLine("Test - CurrentLoc");
+            Console.WriteLine("Test - Location");
             try
             {
-                var request = new GeolocationRequest(GeolocationAccuracy.Medium);
-                var location = await Geolocation.GetLocationAsync(request);
+                var address = l ;
+                var locations = await Geocoding.GetLocationsAsync(address);
+                var location = locations?.FirstOrDefault();
 
                 if (location != null)
                 {
-                    Console.WriteLine($"current Loc - Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
-                    MarkerOptions curLoc = new MarkerOptions();
-                    curLoc.SetPosition(new LatLng(location.Latitude, location.Longitude));
-                    var address = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude);
-                    var placemark = address?.FirstOrDefault();
-                    var geocodeAddress = "";
-                    if (placemark != null)
-                    {
-                        geocodeAddress =
-                        $"AdminArea: {placemark.AdminArea}\n" +
-                        $"CountryCode: {placemark.CountryCode}\n" +
-                        $"CountryName: {placemark.CountryName}\n" +
-                        $"FeatureName: {placemark.FeatureName}\n" +
-                        $"Locality: {placemark.Locality}\n" +
-                        $"PostalCode: {placemark.PostalCode}\n" +
-                        $"SubAdminArea: {placemark.SubAdminArea}\n" +
-                        $"SubLocality: {placemark.SubLocality}\n" +
-                        $"SubThoroughfare: {placemark.SubThoroughfare}\n" +
-                        $"Thoroughfare: {placemark.Thoroughfare}\n";
+                    Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}");
+                    
+                    builder.Target(new LatLng(location.Latitude, location.Longitude));
+                    builder.Zoom(20);
+                    builder.Bearing(155);
+                    builder.Tilt(80);
 
-                    }
-                    curLoc.SetTitle("You are here" + geocodeAddress);
-                    curLoc.SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueAzure));
+                   
 
-                    googleMap.AddMarker(curLoc);
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.SetPosition(new LatLng(location.Latitude, location.Longitude));
+                    markerOptions.SetTitle(An);
 
-                }
-                else
-                {
-                    getLastLocation(googleMap);
+                    googleMap.AddMarker(markerOptions);
+
+                    //var request = new GeolocationRequest(GeolocationAccuracy.Medium);
+                    //var location = await Geolocation.GetLocationAsync(request);
+
+                    //if (location != null)
+                    //{
+                    //    Console.WriteLine($"current Loc - Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
+                    //    MarkerOptions curLoc = new MarkerOptions();
+                    //    curLoc.SetPosition(new LatLng(location.Latitude, location.Longitude));
+                    //    var address = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude);
+                    //    var placemark = address?.FirstOrDefault();
+                    //    var geocodeAddress = "";
+                    //    if (placemark != null)
+                    //    {
+                    //        geocodeAddress =
+                    //        $"AdminArea: {placemark.AdminArea}\n" +
+                    //        $"CountryCode: {placemark.CountryCode}\n" +
+                    //        $"CountryName: {placemark.CountryName}\n" +
+                    //        $"FeatureName: {placemark.FeatureName}\n" +
+                    //        $"Locality: {placemark.Locality}\n" +
+                    //        $"PostalCode: {placemark.PostalCode}\n" +
+                    //        $"SubAdminArea: {placemark.SubAdminArea}\n" +
+                    //        $"SubLocality: {placemark.SubLocality}\n" +
+                    //        $"SubThoroughfare: {placemark.SubThoroughfare}\n" +
+                    //        $"Thoroughfare: {placemark.Thoroughfare}\n";
+
+                    //    }
+                    //    curLoc.SetTitle("You are here" + geocodeAddress);
+                    //    curLoc.SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueAzure));
+
+                    //    googleMap.AddMarker(curLoc);
+
                 }
             }
+
+
             catch (FeatureNotSupportedException fnsEx)
             {
                 // Handle not supported on device exception
