@@ -52,19 +52,12 @@ namespace Assessment2_Ict638
 
            
 
-            var mapFragment = (MapFragment)FragmentManager.FindFragmentById(Resource.Id.PMapFrgContainer);
-            mapFragment.GetMapAsync(this);
+           
 
 
         }
 
-        public static MapFragment newInstance()
-        {
-            var mapFrag = MapFragment.NewInstance();
-            ChildFragmentManager.BeginTransaction()
-                                    .Add(Resource.Id.PMapFrgContainer, mapFrag, "map_fragment")
-                                    .Commit();
-        }
+        
 
         private void BtnPModify_Click(object sender, EventArgs e)
         {
