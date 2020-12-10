@@ -100,9 +100,9 @@ namespace Assessment2_Ict638
         }
         private async void BtnShare_Click(object sender, EventArgs e)
         {
-            string locDetails = "";
-            locDetails = Al;
-            await ShareText(locDetails);
+            string ADetails = "";
+            ADetails = An+Am+Ap+Al;
+            await ShareText(ADetails);
         }
 
         public async Task ShareText(string text)
@@ -110,7 +110,7 @@ namespace Assessment2_Ict638
             await Share.RequestAsync(new ShareTextRequest
             {
                 Text = text,
-                Title = "Location Share"
+                Title = "Agent detail Share"
             }
             );
         }

@@ -191,7 +191,8 @@ namespace Assessment2_Ict638
         }
         private async void BtnShare_Click(object sender, EventArgs e)
         {
-            string locDetails = "Hi, I am interested in the house at" + l + "you have posted for rent. Could I please have more details?";   
+            string locDetails = "";
+            locDetails =h+nr+nt+r+l ;
             await ShareText(locDetails);
         }
 
@@ -200,7 +201,7 @@ namespace Assessment2_Ict638
             await Share.RequestAsync(new ShareTextRequest
             {
                 Text = text,
-                Title = h
+                Title = "House Detail Share"
             }
             );
         }
