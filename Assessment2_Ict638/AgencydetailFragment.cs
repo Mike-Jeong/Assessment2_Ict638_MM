@@ -19,19 +19,23 @@ namespace Assessment2_Ict638
     public class AgencydetailFragment : Fragment, IOnMapReadyCallback
     {
         GoogleMap gMap;
-        LatLng curLocation;
+        LatLng lasLoc;
        
         string An;
         string Ap;
         string Am;
         string Al;
+        string l;
+        string n;
 
 
-        public AgencydetailFragment(string agencyname, string agencyphonenumber, string agencyemail, string agencylocation)
+        public AgencydetailFragment(string agencyname, string agencyphonenumber, string agencyemail, string agencylocation , string name, string location)
         {
-            An = agencyname; Ap = agencyphonenumber; Am = agencyemail; Al = agencylocation;
+            An = agencyname; Ap = agencyphonenumber; Am = agencyemail; Al = agencylocation; l = location; n = name;
 
         }
+
+        
 
 
 
@@ -68,19 +72,14 @@ namespace Assessment2_Ict638
 
             Button btnShare = v.FindViewById<Button>(Resource.Id.btnAShare);
             Button btnSMS = v.FindViewById<Button>(Resource.Id.btnASMS);
-            Button btnAhouses = v.FindViewById<Button>(Resource.Id.btnAhouses);
 
             btnShare.Click += BtnShare_Click;
             btnSMS.Click += BtnSMS_Click;
-            btnAhouses.Click += BtnAhouses_Click;
 
             return v;
         }
 
-        private void BtnAhouses_Click(object sender, EventArgs e)
-        {
-            getCurrentLoc(gMap);
-        }
+         
 
         private async void BtnSMS_Click(object sender, EventArgs e)
         {
@@ -89,8 +88,8 @@ namespace Assessment2_Ict638
 
             try
             {
-                string text = "Hi, I am saw your details on the Rent-a-go app. Could you please send me details of more houses for rent in the same price range?";
-                string recipient = "0211231234";
+                string text = "Hi, I am" +n+ "saw your details on the Rent-a-go app. Could you please send me details of more houses for rent in the same price range?";
+                string recipient = Ap;
                 var message = new SmsMessage(text, new[] { recipient });
                 await Sms.ComposeAsync(message);
             }
@@ -102,7 +101,7 @@ namespace Assessment2_Ict638
         private async void BtnShare_Click(object sender, EventArgs e)
         {
             string locDetails = "";
-            locDetails += "Latitude: " + curLocation.Latitude + "\nLongtitude" + curLocation.Longitude;
+            locDetails = Al;
             await ShareText(locDetails);
         }
 
@@ -123,21 +122,21 @@ namespace Assessment2_Ict638
             googleMap.UiSettings.ZoomControlsEnabled = true;
             googleMap.UiSettings.CompassEnabled = true;
 
-            LatLng loc = new LatLng(-36.84966, 174.76526);
-            CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
-            builder.Target(loc);
-            builder.Zoom(20);
-            builder.Tilt(65);
+            //LatLng loc = new LatLng(lasLoc);
+            //CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
+            //builder.Target(loc);
+            //builder.Zoom(20);
+            //builder.Tilt(65);
 
-            CameraPosition cPos = builder.Build();
-            CameraUpdate cameraUpdate = CameraUpdateFactory.NewCameraPosition(cPos);
-            googleMap.MoveCamera(cameraUpdate);
+            //CameraPosition cPos = builder.Build();
+            //CameraUpdate cameraUpdate = CameraUpdateFactory.NewCameraPosition(cPos);
+            //googleMap.MoveCamera(cameraUpdate);
 
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.SetPosition(loc);
-            markerOptions.SetTitle("NZSE City Campus");
+            //MarkerOptions markerOptions = new MarkerOptions();
+            //markerOptions.SetPosition(loc);
+            //markerOptions.SetTitle("NZSE City Campus");
 
-            googleMap.AddMarker(markerOptions);
+            //googleMap.AddMarker(markerOptions);
         }
 
         public async void getLastLocation(GoogleMap googleMap)
@@ -179,12 +178,15 @@ namespace Assessment2_Ict638
 
 
                 var location = locations?.FirstOrDefault();
+                
                 if (location != null)
                 {
-                    //Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}");
+                    Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}");
+                    MarkerOptions lasLoc = new MarkerOptions();
+                    lasLoc.SetPosition(new LatLng(location.Latitude, location.Longitude));
                     CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
                     builder.Target(new LatLng(location.Latitude, location.Longitude));
-                    builder.Zoom(18);
+                    builder.Zoom(20);
                     builder.Bearing(155);
                     builder.Tilt(80);
 
@@ -198,9 +200,10 @@ namespace Assessment2_Ict638
 
 
 
-                    gmap.MoveCamera(cameraUpdate);
+                    googleMap.MoveCamera(cameraUpdate);
 
                 }
+            }
             //catch (FeatureNotSupportedException fnsEx)
             //{
             //    // Handle not supported on device exception
