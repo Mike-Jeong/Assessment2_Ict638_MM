@@ -97,12 +97,7 @@
             android:layout_height="wrap_content" 
             android:layout_weight="2"/>
 
-         <Button
-            android:id="@+id/btnAhouses"
-            android:text="Other houses location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:layout_weight="2"/>
+         //button house delete
     </LinearLayout>
 
 

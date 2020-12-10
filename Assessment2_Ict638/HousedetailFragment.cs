@@ -34,7 +34,8 @@ namespace Assessment2_Ict638
         string l;
         string an;
         string d;
-        List<Data> dList = new List<Data>();
+        
+      
 
 
 
@@ -43,6 +44,10 @@ namespace Assessment2_Ict638
             h = heading; nr = numberofroom; nt = numberoftoilet; r = rentfee; l = location; an = agencyname; d = description;
 
         }
+
+        
+
+
 
 
         public void getph(int n) 
@@ -163,14 +168,7 @@ namespace Assessment2_Ict638
 
             return v;
         }
-        private void putData()
-        {
-            String url = "https://10.0.2.2:5001/api/Data";
-            string response = APIConnect.Get(url);
-            dList = JsonConvert.DeserializeObject<List<Data>>(response);
-
-
-        }
+       
 
         private async void BtnSMS_Click(object sender, EventArgs e)
         {
@@ -180,8 +178,8 @@ namespace Assessment2_Ict638
 
             try
             { 
-                string text = "Hi, I am interested in the house at"+location+"you have posted for rent. Could I please have more details?";
-                string recipient = "0211231234";
+                string text = "Hi, I am interested in the house at"+l+"you have posted for rent. Could I please have more details?";
+                string recipient = "1";
                 var message = new SmsMessage(text, new[] { recipient });
                 await Sms.ComposeAsync(message);
             }

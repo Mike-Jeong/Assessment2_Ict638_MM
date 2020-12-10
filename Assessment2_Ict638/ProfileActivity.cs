@@ -9,11 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assessment2_Ict638.Models;
+using Android.Util;
+using Android.Gms.Maps;
 
 namespace Assessment2_Ict638
 {
     [Activity(Label = "ProfileActivity")]
-    public class ProfileActivity : Activity
+    public class ProfileActivity : Activity, IOnMapReadyCallback
     {
         int userid;
 
@@ -41,19 +43,27 @@ namespace Assessment2_Ict638
             tv1.Text = bundle.GetString("email");
 
 
+            // Delete the logout and current location
             Button btnPModify = FindViewById<Button>(Resource.Id.btnPModify);
-            Button btnPLogout = FindViewById<Button>(Resource.Id.btnPLogout);
-            Button btnPCloc = FindViewById<Button>(Resource.Id.btnPCloc);
-
-            btnPLogout.Click += BtnPLogout_Click;
+            
 
             btnPModify.Click += BtnPModify_Click;
 
 
+           
+
+            var mapFragment = (MapFragment)FragmentManager.FindFragmentById(Resource.Id.PMapFrgContainer);
+            mapFragment.GetMapAsync(this);
 
 
+        }
 
-
+        public static MapFragment newInstance()
+        {
+            var mapFrag = MapFragment.NewInstance();
+            ChildFragmentManager.BeginTransaction()
+                                    .Add(Resource.Id.PMapFrgContainer, mapFrag, "map_fragment")
+                                    .Commit();
         }
 
         private void BtnPModify_Click(object sender, EventArgs e)
@@ -128,6 +138,11 @@ namespace Assessment2_Ict638
                 builder.Dispose();  
             });
             builder.Create().Show();
+        }
+
+        public void OnMapReady(GoogleMap googleMap)
+        {
+            throw new NotImplementedException();
         }
     }
 }

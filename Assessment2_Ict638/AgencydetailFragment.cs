@@ -89,7 +89,7 @@ namespace Assessment2_Ict638
 
             try
             {
-                string text = "Hi, I am"+fisrtname,lastname+"saw your details on the Rent-a-go app. Could you please send me details of more houses for rent in the same price range?";
+                string text = "Hi, I am saw your details on the Rent-a-go app. Could you please send me details of more houses for rent in the same price range?";
                 string recipient = "0211231234";
                 var message = new SmsMessage(text, new[] { recipient });
                 await Sms.ComposeAsync(message);
@@ -145,54 +145,89 @@ namespace Assessment2_Ict638
             Console.WriteLine("Test - LastLoc");
             try
             {
-                var location = await Geolocation.GetLastKnownLocationAsync();
+                //var location = await Geolocation.GetLastKnownLocationAsync();
+                //if (location != null)
+                //{
+                //    Console.WriteLine($"Last Loc - Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
+                //    MarkerOptions curLoc = new MarkerOptions();
+                //    curLoc.SetPosition(new LatLng(location.Latitude, location.Longitude));
+                //    var address = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude);
+                //    var placemark = address?.FirstOrDefault();
+                //    var geocodeAddress = "";
+                //    if (placemark != null)
+                //    {
+                //        geocodeAddress =
+                //        $"AdminArea: {placemark.AdminArea}\n" +
+                //        $"CountryCode: {placemark.CountryCode}\n" +
+                //        $"CountryName: {placemark.CountryName}\n" +
+                //        $"FeatureName: {placemark.FeatureName}\n" +
+                //        $"Locality: {placemark.Locality}\n" +
+                //        $"PostalCode: {placemark.PostalCode}\n" +
+                //        $"SubAdminArea: {placemark.SubAdminArea}\n" +
+                //        $"SubLocality: {placemark.SubLocality}\n" +
+                //        $"SubThoroughfare: {placemark.SubThoroughfare}\n" +
+                //        $"Thoroughfare: {placemark.Thoroughfare}\n";
+
+                //    }
+                //    curLoc.SetTitle("You were here" + geocodeAddress);
+                //    curLoc.SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueAzure));
+                //    googleMap.AddMarker(curLoc);
+                //}
+                var address = Al;
+                var locations = await Geocoding.GetLocationsAsync(address);
+
+
+
+                var location = locations?.FirstOrDefault();
                 if (location != null)
                 {
-                    Console.WriteLine($"Last Loc - Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
-                    MarkerOptions curLoc = new MarkerOptions();
-                    curLoc.SetPosition(new LatLng(location.Latitude, location.Longitude));
-                    var address = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude);
-                    var placemark = address?.FirstOrDefault();
-                    var geocodeAddress = "";
-                    if (placemark != null)
-                    {
-                        geocodeAddress =
-                        $"AdminArea: {placemark.AdminArea}\n" +
-                        $"CountryCode: {placemark.CountryCode}\n" +
-                        $"CountryName: {placemark.CountryName}\n" +
-                        $"FeatureName: {placemark.FeatureName}\n" +
-                        $"Locality: {placemark.Locality}\n" +
-                        $"PostalCode: {placemark.PostalCode}\n" +
-                        $"SubAdminArea: {placemark.SubAdminArea}\n" +
-                        $"SubLocality: {placemark.SubLocality}\n" +
-                        $"SubThoroughfare: {placemark.SubThoroughfare}\n" +
-                        $"Thoroughfare: {placemark.Thoroughfare}\n";
+                    //Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}");
+                    CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
+                    builder.Target(new LatLng(location.Latitude, location.Longitude));
+                    builder.Zoom(18);
+                    builder.Bearing(155);
+                    builder.Tilt(80);
 
-                    }
-                    curLoc.SetTitle("You were here" + geocodeAddress);
-                    curLoc.SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueAzure));
-                    googleMap.AddMarker(curLoc);
+
+
+                    CameraPosition cameraPosition = builder.Build();
+
+
+
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.NewCameraPosition(cameraPosition);
+
+
+
+                    gmap.MoveCamera(cameraUpdate);
+
                 }
-            }
+            //catch (FeatureNotSupportedException fnsEx)
+            //{
+            //    // Handle not supported on device exception
+            //    Toast.MakeText(Activity, "Feature Not Supported", ToastLength.Short);
+            //}
+            //catch (FeatureNotEnabledException fneEx)
+            //{
+            //    // Handle not enabled on device exception
+            //    Toast.MakeText(Activity, "Feature Not Enabled", ToastLength.Short);
+            //}
+            //catch (PermissionException pEx)
+            //{
+            //    // Handle permission exception
+            //    Toast.MakeText(Activity, "Needs more permission", ToastLength.Short);
+            //}
+            //catch (Exception ex)
+            //{
+            //    // Unable to get location
+            //    Toast.MakeText(Activity, "Unable to get location", ToastLength.Short);
+            //}
             catch (FeatureNotSupportedException fnsEx)
             {
-                // Handle not supported on device exception
-                Toast.MakeText(Activity, "Feature Not Supported", ToastLength.Short);
-            }
-            catch (FeatureNotEnabledException fneEx)
-            {
-                // Handle not enabled on device exception
-                Toast.MakeText(Activity, "Feature Not Enabled", ToastLength.Short);
-            }
-            catch (PermissionException pEx)
-            {
-                // Handle permission exception
-                Toast.MakeText(Activity, "Needs more permission", ToastLength.Short);
+                // Feature not supported on device
             }
             catch (Exception ex)
             {
-                // Unable to get location
-                Toast.MakeText(Activity, "Unable to get location", ToastLength.Short);
+                // Handle exception that may have occurred in geocoding
             }
         }
 

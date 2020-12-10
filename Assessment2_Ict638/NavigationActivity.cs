@@ -49,22 +49,29 @@ namespace Assessment2_Ict638
             switch (item.ItemId)
             {
                 case Resource.Id.menu1:
-
+                    
                     navFragContainer.RemoveAllViewsInLayout();
                     HousedetailFragment sFrag = new HousedetailFragment(heading, numberofroom, numberoftoilet, rentfee, location, agencyname, description);
+
+                    //call the agency number
                     
+
                     transaction = FragmentManager.BeginTransaction();
                     transaction.Replace(Resource.Id.navFragContainer, sFrag);
                     transaction.Commit();
 
+                   
                     return true;
 
+                    
                 case Resource.Id.menu2:
-                    //need to change users to agency (not list agency)
-                    //123
 
-                    bool staus = false;
-                    string url = "https://10.0.2.2:5001/api/Users";
+
+                    //need to change users to agency (not list agency)
+                    
+
+                    bool status = false;
+                    string url = "https://10.0.2.2:5001/api/Agency";
                     string response = APIConnect.Get(url);
                     List<Agency> agencies = JsonConvert.DeserializeObject<List<Agency>>(response);
 
@@ -73,6 +80,7 @@ namespace Assessment2_Ict638
                     {
                         if (agency.agencyname == data.GetString("agencyname"))
                         {
+                            status = true;
                             navFragContainer.RemoveAllViewsInLayout();
                             AgencydetailFragment aFrag = new AgencydetailFragment(agency.agencyname, agency.agencyphonenumber, agency.agencyemail, agency.agencylocation);
 
@@ -83,14 +91,11 @@ namespace Assessment2_Ict638
                             break;
                         }
                     }
-                    
+                    return status;
 
-
-
-                    return true;
-               
             }
             return false;
+            
         }
 
         protected override void OnCreate(Bundle savedInstanceState)
