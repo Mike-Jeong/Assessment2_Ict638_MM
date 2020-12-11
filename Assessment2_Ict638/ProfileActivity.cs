@@ -120,7 +120,7 @@ namespace Assessment2_Ict638
 
         public void OnMapReady(GoogleMap googleMap)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         
             gMap = googleMap;
             googleMap.MapType = GoogleMap.MapTypeNormal;
