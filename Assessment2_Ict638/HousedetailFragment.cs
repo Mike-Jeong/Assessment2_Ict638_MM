@@ -40,9 +40,9 @@ namespace Assessment2_Ict638
 
 
 
-        public HousedetailFragment(string heading, string numberofroom, string numberoftoilet, string rentfee, string location, string agencyname, string description, string agencyphonenumber)
+        public HousedetailFragment(string heading, string numberofroom, string numberoftoilet, string rentfee, string location, string agencyname, string description ) //, string agencyphonenumber)
         {
-            h = heading; nr = numberofroom; nt = numberoftoilet; r = rentfee; l = location; an = agencyname; d = description; anum = agencyphonenumber;
+            h = heading; nr = numberofroom; nt = numberoftoilet; r = rentfee; l = location; an = agencyname; d = description; // anum = agencyphonenumber;
 
         }
 
@@ -125,13 +125,13 @@ namespace Assessment2_Ict638
             // Use this to return your custom view for this Fragment
             View v = inflater.Inflate(Resource.Layout.fragment_housedetail, container, false);
 
-            TextView Heading = v.FindViewById<EditText>(Resource.Id.HtvHeading);
-            TextView Numberofroom = v.FindViewById<EditText>(Resource.Id.HtvNumberofroom);
-            TextView Numberoftoilet = v.FindViewById<EditText>(Resource.Id.HtvNumberoftoilet);
-            TextView Rentfee = v.FindViewById<EditText>(Resource.Id.HtvRentfee);
-            TextView nAgency = v.FindViewById<EditText>(Resource.Id.HtvAgency);
-            TextView ALocation = v.FindViewById<EditText>(Resource.Id.HtvLocation);
-            TextView Description = v.FindViewById<EditText>(Resource.Id.HtvDescription);
+            TextView Heading = v.FindViewById<TextView>(Resource.Id.HtvHeading);
+            TextView Numberofroom = v.FindViewById<TextView>(Resource.Id.HtvNumberofroom);
+            TextView Numberoftoilet = v.FindViewById<TextView>(Resource.Id.HtvNumberoftoilet);
+            TextView Rentfee = v.FindViewById<TextView>(Resource.Id.HtvRentfee);
+            TextView nAgency = v.FindViewById<TextView>(Resource.Id.HtvAgency);
+            TextView ALocation = v.FindViewById<TextView>(Resource.Id.HtvLocation);
+            TextView Description = v.FindViewById<TextView>(Resource.Id.HtvDescription);
 
 
 

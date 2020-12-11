@@ -3,6 +3,8 @@ using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.V7.Widget;
+using Android.Support.Design.Widget;
+using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
 using System;
@@ -14,13 +16,20 @@ using Assessment2_Ict638.Models;
 using Android.Util;
 using Android.Gms.Common;
 using Android.Support.V7.App;
+using AlertDialog = Android.App.AlertDialog;
+
+
+
+
+
+
 
 namespace Assessment2_Ict638
 {/// <summary>
 /// //
 /// </summary>
-    [Activity(Label = "HomeActivity")]
-    public class HomeActivity : AppCompatActivity
+    [Activity(Label = "Rent A Go")]
+    public class HomeActivity : AppCompatActivity //, Android.Support.V7.Widget.Toolbar.IOnMenuItemClickListener
     {
         public const string TAG = "HomeActivity";
         internal static readonly string CHANNEL_ID = "ict638assessment_notification_channel";
@@ -89,7 +98,8 @@ namespace Assessment2_Ict638
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            SetContentView(Resource.Layout.activity_home);
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            SetContentView(Resource.Layout.content_home);
 
             if (Intent.Extras != null)
             {
@@ -107,6 +117,11 @@ namespace Assessment2_Ict638
             CreateNotificationChannel();
 
             //Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
+            //SetSupportActionBar(toolbar);
+
+            Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
+      
+            //toolbar.SetOnMenuItemClickListener(this);
             //SetSupportActionBar(toolbar);
 
             mPhotoAlbum = new PhotoAlbum();
@@ -160,29 +175,76 @@ namespace Assessment2_Ict638
         {
             switch (item.ItemId)
             {
-                case Resource.Id.Logout:
-                    {
-                        Finish();
-                        return true;
-                    }
                 case Resource.Id.EditProfile:
+                    Intent newActivity = new Intent(this, typeof(ProfileActivity));
+                    Bundle bundle = Intent.GetBundleExtra("data");
+                    newActivity.PutExtra("data", bundle);
+
+
+                    StartActivity(newActivity);
+                    return true;
+                case Resource.Id.Logout:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                    builder.SetTitle("Logout?");
+                    builder.SetMessage("Are you sure you want to log out of the app?\n(Go to the Login page after the logout.)");
+                    builder.SetPositiveButton("OK", (c, ev) =>
                     {
-                        //data or user 
-                        Intent newActivity = new Intent(this, typeof(ProfileActivity));
-                        Bundle bundle = Intent.GetBundleExtra("user");
-                        newActivity.PutExtra("user", bundle);
 
+                        Intent LoginActivity = new Intent(this, typeof(LoginActivity));
+                        StartActivity(LoginActivity);
+                        FinishAffinity();
 
-                        StartActivity(newActivity);
-                        return true;
-                    }
+                    });
+                    builder.SetNegativeButton("Cancel", (c, ev) =>
+                    {
+                        builder.Dispose();
+                    });
+                    builder.Create().Show();
+                    return true;
+
 
             }
 
             return base.OnOptionsItemSelected(item);
         }
 
+       /* public bool OnMenuItemClick(IMenuItem item)
+        {
+            switch (item.ItemId)
+            {
+                case Resource.Id.EditProfile:
+                    Intent newActivity = new Intent(this, typeof(ProfileActivity));
+                    Bundle bundle = Intent.GetBundleExtra("data");
+                    newActivity.PutExtra("data", bundle);
 
+
+                    StartActivity(newActivity);
+                    return true;
+                case Resource.Id.Logout:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                    builder.SetTitle("Logout?");
+                    builder.SetMessage("Are you sure you want to log out of the app?\n(Go to the Login page after the logout.)");
+                    builder.SetPositiveButton("OK", (c, ev) =>
+                    {
+
+                        Intent LoginActivity = new Intent(this, typeof(LoginActivity));
+                        StartActivity(LoginActivity);
+                        FinishAffinity();
+
+                    });
+                    builder.SetNegativeButton("Cancel", (c, ev) =>
+                    {
+                        builder.Dispose();
+                    });
+                    builder.Create().Show();
+                    return true;
+
+
+            }
+            return false;
+        }*/
 
     }
 }
