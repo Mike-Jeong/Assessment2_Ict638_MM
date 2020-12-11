@@ -11,6 +11,8 @@ using System.Text;
 using Assessment2_Ict638.Models;
 using Android.Util;
 using Android.Gms.Maps;
+using Xamarin.Essentials;
+using Android.Gms.Maps.Model;
 
 namespace Assessment2_Ict638
 {
@@ -18,6 +20,7 @@ namespace Assessment2_Ict638
     public class ProfileActivity : Activity, IOnMapReadyCallback
     {
         int userid;
+       
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -50,10 +53,13 @@ namespace Assessment2_Ict638
             btnPModify.Click += BtnPModify_Click;
 
 
-           
+            FrameLayout mapFragContainer = FindViewById<FrameLayout>(Resource.Id.PMapFrgContainer);
 
-           
 
+            var mapFrag = MapFragment.NewInstance();
+            FragmentManager.BeginTransaction().Add(Resource.Id.PMapFrgContainer, mapFrag, "map").Commit();
+
+            mapFrag.GetMapAsync(this);
 
         }
 
@@ -108,34 +114,114 @@ namespace Assessment2_Ict638
         }
 
 
-
+        GoogleMap gMap;
 
         //May delete the logout in profile
-
-        private void BtnPLogout_Click(object sender, EventArgs e)
-        {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-            builder.SetTitle("Logout?");
-            builder.SetMessage("Are you sure you want to log out of the app?\n(Go to the Login page after the logout.)");
-            builder.SetPositiveButton("OK", (c, ev) =>
-            {
-
-                Intent LoginActivity = new Intent(this, typeof(LoginActivity));
-                StartActivity(LoginActivity);
-                FinishAffinity();
-
-            });
-            builder.SetNegativeButton("Cancel", (c, ev) =>
-            {
-                builder.Dispose();  
-            });
-            builder.Create().Show();
-        }
 
         public void OnMapReady(GoogleMap googleMap)
         {
             throw new NotImplementedException();
+        
+            gMap = googleMap;
+            googleMap.MapType = GoogleMap.MapTypeNormal;
+            googleMap.UiSettings.ZoomControlsEnabled = true;
+            googleMap.UiSettings.CompassEnabled = true;
+
+            getCurLocation(googleMap);
+
+            //LatLng loc = new LatLng(lasLoc);
+            //CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
+            //builder.Target(loc);
+            //builder.Zoom(20);
+            //builder.Tilt(65);
+
+            //CameraPosition cPos = builder.Build();
+            //CameraUpdate cameraUpdate = CameraUpdateFactory.NewCameraPosition(cPos);
+            //googleMap.MoveCamera(cameraUpdate);
+
+            //MarkerOptions markerOptions = new MarkerOptions();
+            //markerOptions.SetPosition(loc);
+            //markerOptions.SetTitle("NZSE City Campus");
+
+            //googleMap.AddMarker(markerOptions);
+
+            
+        }
+
+        public async void getCurLocation(GoogleMap googleMap)
+        {
+            Console.WriteLine("Test - CurrentLoc");
+            try
+            {
+                var request = new GeolocationRequest(GeolocationAccuracy.Medium);
+                var location = await Geolocation.GetLocationAsync(request);
+
+                if (location != null)
+                {
+                    Console.WriteLine($"current Loc - Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
+                    MarkerOptions curLoc = new MarkerOptions();
+                    curLoc.SetPosition(new LatLng(location.Latitude, location.Longitude));
+                    var address = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude);
+                    var placemark = address?.FirstOrDefault();
+                    var geocodeAddress = "";
+                    if (placemark != null)
+                    {
+                        geocodeAddress =
+                        $"AdminArea: {placemark.AdminArea}\n" +
+                        $"CountryCode: {placemark.CountryCode}\n" +
+                        $"CountryName: {placemark.CountryName}\n" +
+                        $"FeatureName: {placemark.FeatureName}\n" +
+                        $"Locality: {placemark.Locality}\n" +
+                        $"PostalCode: {placemark.PostalCode}\n" +
+                        $"SubAdminArea: {placemark.SubAdminArea}\n" +
+                        $"SubLocality: {placemark.SubLocality}\n" +
+                        $"SubThoroughfare: {placemark.SubThoroughfare}\n" +
+                        $"Thoroughfare: {placemark.Thoroughfare}\n";
+
+                    }
+                    curLoc.SetTitle("You are here" + geocodeAddress);
+                    curLoc.SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueAzure));
+
+                    googleMap.AddMarker(curLoc);
+
+                    CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
+                    builder.Target(new LatLng(location.Latitude, location.Longitude));
+                    builder.Zoom(20);
+                    builder.Tilt(65);
+
+                    CameraPosition cPos = builder.Build();
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.NewCameraPosition(cPos);
+                    googleMap.MoveCamera(cameraUpdate);
+
+
+
+
+
+                }
+                else
+                {
+                    OnMapReady(googleMap);
+                }
+            }
+            catch (FeatureNotSupportedException fnsEx)
+            {
+                // Handle not supported on device exception
+                // Toast.MakeText(Activity"Feature Not Supported", ToastLength.Short);
+            }
+            catch (FeatureNotEnabledException fneEx)
+            {
+                // Handle not enabled on device exception
+                // Toast.MakeText(Activity, "Feature Not Enabled", ToastLength.Short);
+            }
+            catch (PermissionException pEx)
+            {
+                // Handle permission exception
+                // Toast.MakeText(Activity, "Needs more permission", ToastLength.Short);
+            }
+            catch (Exception ex)
+            {
+                OnMapReady(googleMap);
+            }
         }
     }
 }

@@ -11,19 +11,67 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Assessment2_Ict638.Models;
+using Android.Util;
+using Android.Gms.Common;
+using Android.Support.V7.App;
 
 namespace Assessment2_Ict638
 {/// <summary>
 /// //
 /// </summary>
     [Activity(Label = "HomeActivity")]
-    public class HomeActivity : Activity
+    public class HomeActivity : AppCompatActivity
     {
+        public const string TAG = "HomeActivity";
+        internal static readonly string CHANNEL_ID = "ict638assessment_notification_channel";
+
         RecyclerView mRecycleView;
         RecyclerView.LayoutManager mLayoutManager;
         PhotoAlbum mPhotoAlbum;
         PhotoAdapter mAdapter;
         List<Data> dList = new List<Data>();
+
+        public bool IsPlayServicesAvailable()
+        {
+            int resultCode = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(this);
+            if (resultCode != ConnectionResult.Success)
+            {
+                if (GoogleApiAvailability.Instance.IsUserResolvableError(resultCode))
+                    Log.Debug(TAG, GoogleApiAvailability.Instance.GetErrorString(resultCode));
+                else
+                {
+                    Log.Debug(TAG, "This device is not supported");
+                    Finish();
+                }
+                return false;
+            }
+
+            Log.Debug(TAG, "Google Play Services is available.");
+            return true;
+        }
+
+        private void CreateNotificationChannel()
+        {
+            if (Build.VERSION.SdkInt < BuildVersionCodes.O)
+            {
+                // Notification channels are new in API 26 (and not a part of the
+                // support library). There is no need to create a notification
+                // channel on older versions of Android.
+                return;
+            }
+
+            var channelName = CHANNEL_ID;
+            var channelDescription = string.Empty;
+            var channel = new NotificationChannel(CHANNEL_ID, channelName, NotificationImportance.Default)
+            {
+                Description = channelDescription
+            };
+
+            var notificationManager = (NotificationManager)GetSystemService(NotificationService);
+            notificationManager.CreateNotificationChannel(channel);
+
+        }
+
         private void putData()
         {
            /* dList.Add(new Data("Database", "This is the database description"));
@@ -42,6 +90,24 @@ namespace Assessment2_Ict638
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_home);
+
+            if (Intent.Extras != null)
+            {
+                foreach (var key in Intent.Extras.KeySet())
+                {
+                    if (key != null)
+                    {
+                        var value = Intent.Extras.GetString(key);
+                        Log.Debug(TAG, "Key: {0} Value: {1}", key, value);
+                    }
+                }
+            }
+
+            IsPlayServicesAvailable();
+            CreateNotificationChannel();
+
+            //Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
+            //SetSupportActionBar(toolbar);
 
             mPhotoAlbum = new PhotoAlbum();
             putData();
@@ -62,7 +128,7 @@ namespace Assessment2_Ict638
         private void MAdapter_ItemClick(object sender, int e)
         {
            int photoNum = e + 1;
-            Toast.MakeText(this, "This is photo number " + photoNum, ToastLength.Short).Show();
+            Toast.MakeText(this, "This is House number " + photoNum, ToastLength.Short).Show();
 
             Intent i = new Intent(this, typeof(NavigationActivity));
             Bundle bundle2 = new Bundle();
@@ -82,25 +148,24 @@ namespace Assessment2_Ict638
 
 
         }
-        /*
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
             MenuInflater.Inflate(Resource.Menu.menu_main, menu);
-            return base.OnCreateOptionsMenu(menu);
-        }*/
+            //return base.OnCreateOptionsMenu(menu);
+            return true;
+        }
 
-        /*
+
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
             switch (item.ItemId)
             {
-                case Resource.Id.menuLogout:
+                case Resource.Id.Logout:
                     {
-                        Intent newActivity = new Intent(this, typeof(HomeActivity));
-                        StartActivity(newActivity);
+                        Finish();
                         return true;
                     }
-                case Resource.Id.menuProfileEdit:
+                case Resource.Id.EditProfile:
                     {
                         //data or user 
                         Intent newActivity = new Intent(this, typeof(ProfileActivity));
@@ -111,11 +176,12 @@ namespace Assessment2_Ict638
                         StartActivity(newActivity);
                         return true;
                     }
-               
+
             }
 
             return base.OnOptionsItemSelected(item);
-        }*/
+        }
+
 
 
     }

@@ -35,7 +35,7 @@ namespace Assessment2_Ict638
         string an;
         string d;
         string anum;
-
+        LatLng curLocation;
 
 
 
@@ -207,12 +207,16 @@ namespace Assessment2_Ict638
         }
 
 
-        public async void OnMapReady(GoogleMap googleMap)
+        public void OnMapReady(GoogleMap googleMap)
         {
             gMap = googleMap;
             googleMap.MapType = GoogleMap.MapTypeNormal;
             googleMap.UiSettings.ZoomControlsEnabled = true;
             googleMap.UiSettings.CompassEnabled = true;
+
+            getCurLocation(googleMap);
+            getLastLocation(googleMap);
+
 
             //LatLng loc = new LatLng(lasLoc);
             //CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
@@ -230,6 +234,10 @@ namespace Assessment2_Ict638
 
             //googleMap.AddMarker(markerOptions);
 
+
+        }
+        public async void getCurLocation(GoogleMap googleMap)
+        {
             Console.WriteLine("Test - CurrentLoc");
             try
             {
@@ -292,7 +300,6 @@ namespace Assessment2_Ict638
                 OnMapReady(googleMap);
             }
         }
-
 
 
 

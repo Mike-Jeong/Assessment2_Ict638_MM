@@ -11,6 +11,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Assessment2_Ict638.Models;
 
+
 namespace Assessment2_Ict638
 {
     [Activity(Label = "LoginActivity", MainLauncher = true)]
@@ -27,6 +28,8 @@ namespace Assessment2_Ict638
 
             Button btnnewregister = FindViewById<Button>(Resource.Id.btnnewregister);
             btnnewregister.Click += Btnnewregister_Click;
+
+            
         }
 
         private void Btnnewregister_Click(object sender, EventArgs e)
@@ -34,17 +37,27 @@ namespace Assessment2_Ict638
             Intent newActivity = new Intent(this, typeof(RegisterActivity));
             StartActivity(newActivity);
         }
+        private static EditText edUserName;
+        private static EditText edPassword;
+        public static void clearInput()       
+        {
+            //clear input
+            edUserName.Text = "";
+            edPassword.Text = "";
+            
+        }
 
         private void Btnlogin_Click(object sender, EventArgs e)
         {
 
-            EditText edUserName = FindViewById<EditText>(Resource.Id.et_id);
-            EditText edPassword = FindViewById<EditText>(Resource.Id.et_password);
+            edUserName = FindViewById<EditText>(Resource.Id.et_id);
+            edPassword = FindViewById<EditText>(Resource.Id.et_password);
 
             string uname = edUserName.Text.Trim();
             string pass = edPassword.Text.Trim();
             string name;
             int id;
+            
             if (checkLogin(uname, pass, out id, out name, out string username, out string password, out string phonenumber, out string country, out string email))
             {
                 Intent homeActivity = new Intent(this, typeof(HomeActivity));
@@ -57,12 +70,16 @@ namespace Assessment2_Ict638
                 bundle.PutString("country", country);
                 bundle.PutString("email", email);
                 homeActivity.PutExtra("data", bundle);
+                clearInput();
                 StartActivity(homeActivity);
+
+                
             }
             else
             {
                 Toast.MakeText(this, "Invalid username or password", ToastLength.Long).Show();
             }
+            
 
 
             /*  Intent homeActivity = new Intent(this, typeof(HomeActivity));
@@ -99,8 +116,43 @@ namespace Assessment2_Ict638
                     break;
                 }
             }
+            
             return staus;
 
+        }
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.menu_main, menu);
+            //return base.OnCreateOptionsMenu(menu);
+            return true;
+        }
+
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {//menu
+            switch (item.ItemId)
+            {
+                case Resource.Id.Logout:
+                    {
+                        Intent newActivity = new Intent(this, typeof(HomeActivity));
+                        StartActivity(newActivity);
+                        return true;
+                    }
+                case Resource.Id.EditProfile:
+                    {
+                        //data or user 
+                        Intent newActivity = new Intent(this, typeof(ProfileActivity));
+                        Bundle bundle = Intent.GetBundleExtra("user");
+                        newActivity.PutExtra("user", bundle);
+
+
+                        StartActivity(newActivity);
+                        return true;
+                    }
+
+            }
+
+            return base.OnOptionsItemSelected(item);
         }
 
 

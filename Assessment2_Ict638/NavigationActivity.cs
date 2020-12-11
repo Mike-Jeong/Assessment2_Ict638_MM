@@ -141,7 +141,8 @@ namespace Assessment2_Ict638
 
             // Create your application here
             SetContentView(Resource.Layout.activity_navigation);
-
+            
+            /*
             Bundle data = Intent.GetBundleExtra("data");
             
             string url = "https://10.0.2.2:5001/api/Agency";
@@ -151,7 +152,7 @@ namespace Assessment2_Ict638
             BottomNavigationView navigationView = FindViewById<BottomNavigationView>(Resource.Id.TopNavBar);
             navigationView.SetOnNavigationItemSelectedListener(this);
 
-            //FragmentTransaction transaction = FragmentManager.BeginTransaction();
+            //ChildFragmentManager transaction = FragmentManager.BeginTransaction();
 
             // sFrag. PutExtra("data", data);
             heading = "House name : " + data.GetString("heading");
@@ -162,19 +163,15 @@ namespace Assessment2_Ict638
             agencyname = "Agency name : " + data.GetString("agencyname");
             description = "Description " + data.GetString("description");
 
-            foreach (Agency agency in agencies)
-            {
-                if (agency.agencyname == data.GetString("agencyname"))
-                {
-                    HousedetailFragment sFrag = new HousedetailFragment(heading, numberofroom, numberoftoilet, rentfee, location, agencyname, description, agency.agencylocation);
-                     sFrag.getph(data.GetInt("photoid"));
-                    break;
-                }
-            }
+  
+                    //HousedetailFragment sFrag = new HousedetailFragment(heading, numberofroom, numberoftoilet, rentfee, location, agencyname, description,agencies.agencylocation);
+                    // sFrag.getph(data.GetInt("photoid"));   
+            
 
             navigationView.SelectedItemId = Resource.Id.menu1;
             
-    
+            
+    */
 
         }
         
