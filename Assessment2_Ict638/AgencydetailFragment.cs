@@ -29,9 +29,9 @@ namespace Assessment2_Ict638
         string n;
 
 
-        public AgencydetailFragment(string agencyname, string agencyphonenumber, string agencyemail, string agencylocation)// , string name, string location)
+        public AgencydetailFragment(string agencyname, string agencyphonenumber, string agencyemail, string agencylocation , string name, string location)
         {
-            An = agencyname; Ap = agencyphonenumber; Am = agencyemail; Al = agencylocation;// l = location; n = name;
+            An = agencyname; Ap = agencyphonenumber; Am = agencyemail; Al = agencylocation; l = location; n = name;
 
         }
 
@@ -51,10 +51,10 @@ namespace Assessment2_Ict638
             // Use this to return your custom view for this Fragment
             View v = inflater.Inflate(Resource.Layout.fragment_agencydetail, container, false);
 
-            TextView Name = v.FindViewById<TextView>(Resource.Id.Aname);
-            TextView Phonenumber = v.FindViewById<TextView>(Resource.Id.APhonenumber);
-            TextView AEmail = v.FindViewById<TextView>(Resource.Id.Aemail);
-            TextView Alocation = v.FindViewById<TextView>(Resource.Id.Alocation);
+            TextView Name = v.FindViewById<EditText>(Resource.Id.Aname);
+            TextView Phonenumber = v.FindViewById<EditText>(Resource.Id.APhonenumber);
+            TextView AEmail = v.FindViewById<EditText>(Resource.Id.Aemail);
+            TextView Alocation = v.FindViewById<EditText>(Resource.Id.Alocation);
 
             Name.Text = An;
             Phonenumber.Text = Ap;
