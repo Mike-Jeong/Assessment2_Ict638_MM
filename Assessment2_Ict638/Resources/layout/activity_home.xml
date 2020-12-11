@@ -7,28 +7,36 @@
     android:layout_height="match_parent"
     android:weightSum="15">
 
+ 
+
+
     <LinearLayout
-        android:id="@+id/l1"
-        android:orientation="vertical"
+        android:id="@+id/Hlinearlayout1"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="2">
+        android:layout_weight="1"
+        android:weightSum="15">
+        <TextView
+            android:textAlignment="center"
+            android:id="@+id/tvWelcome"
+            android:text="Hello"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="13"/>
 
-
+        
 
     </LinearLayout>
-       
 
 
-
-
-
+ 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="13"/>
+        android:layout_weight="14"/>
 
    
 </LinearLayout>
