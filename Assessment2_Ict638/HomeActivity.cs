@@ -39,6 +39,7 @@ namespace Assessment2_Ict638
         PhotoAlbum mPhotoAlbum;
         PhotoAdapter mAdapter;
         List<Data> dList = new List<Data>();
+        Bundle bundle;
 
         public bool IsPlayServicesAvailable()
         {
@@ -100,6 +101,8 @@ namespace Assessment2_Ict638
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.content_home);
+            bundle = Intent.GetBundleExtra("data");
+
 
             if (Intent.Extras != null)
             {
@@ -142,22 +145,29 @@ namespace Assessment2_Ict638
 
         private void MAdapter_ItemClick(object sender, int e)
         {
-           int photoNum = e + 1;
+            int photoNum = e + 1;
             Toast.MakeText(this, "This is House number " + photoNum, ToastLength.Short).Show();
 
             Intent i = new Intent(this, typeof(NavigationActivity));
+            string uname = bundle.GetString("username");
+            string uphone = bundle.GetString("phonenumber");
             Bundle bundle2 = new Bundle();
-            bundle2.PutInt("photoid", photoNum);
-            bundle2.PutString("heading", dList[e].heading);
-            bundle2.PutString("description", dList[e].description);
-            bundle2.PutString("numberofroom", dList[e].numberofroom);
-            bundle2.PutString("numberoftoilet", dList[e].numberoftoilet);
-            bundle2.PutString("rentfee", dList[e].rentfee);
-            bundle2.PutString("location", dList[e].location);
-            bundle2.PutString("agencyname", dList[e].agencyname);
-            
+            i.PutExtra("ListItem", JsonConvert.SerializeObject(dList[e]));
 
-            i.PutExtra("data", bundle2);
+            bundle2.PutInt("photoid", photoNum);
+            bundle2.PutString("uname", uname);
+            bundle2.PutString("uphone", uphone);
+
+            /* bundle2.PutString("heading", dList[e].heading);
+             bundle2.PutString("description", dList[e].description);
+             bundle2.PutString("numberofroom", dList[e].numberofroom);
+             bundle2.PutString("numberoftoilet", dList[e].numberoftoilet);
+             bundle2.PutString("rentfee", dList[e].rentfee);
+             bundle2.PutString("location", dList[e].location);
+             bundle2.PutString("agencyname", dList[e].agencyname);*/
+
+
+             i.PutExtra("data", bundle2);
 
             StartActivity(i);
 
@@ -177,8 +187,7 @@ namespace Assessment2_Ict638
             {
                 case Resource.Id.EditProfile:
                     Intent newActivity = new Intent(this, typeof(ProfileActivity));
-                    Bundle bundle = Intent.GetBundleExtra("data");
-                    newActivity.PutExtra("data", bundle);
+                     newActivity.PutExtra("data", bundle);
 
 
                     StartActivity(newActivity);

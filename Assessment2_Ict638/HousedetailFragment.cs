@@ -25,29 +25,37 @@ namespace Assessment2_Ict638
     {
         GoogleMap gMap;
         
-        int photonum;
-        int id;
-        string h;
-        string nr;
-        string nt;
-        string r;
-        string l;
-        string an;
-        string d;
-        string anum;
+       int photonum;
+       int id;
+       List<Data> hList;
+       List<Agency> agencies;
+
+        // string h;
+        // string nr;
+        // string nt;
+        // string r;
+        // string l;
+        // string an;
+        // string d;
+        // string anum;
         LatLng curLocation;
 
 
 
 
-        public HousedetailFragment(string heading, string numberofroom, string numberoftoilet, string rentfee, string location, string agencyname, string description ) //, string agencyphonenumber)
+        public HousedetailFragment(List<Data> l, List<Agency> A) 
         {
-            h = heading; nr = numberofroom; nt = numberoftoilet; r = rentfee; l = location; an = agencyname; d = description; // anum = agencyphonenumber;
+            hList = l;
+            agencies = A;
 
         }
 
 
+       /* public HousedetailFragment(string heading, string numberofroom, string numberoftoilet, string rentfee, string location, string agencyname, string description) //, string agencyphonenumber)
+        {
+            h = heading; nr = numberofroom; nt = numberoftoilet; r = rentfee; l = location; an = agencyname; d = description; // anum = agencyphonenumber;
 
+        }*/
 
 
 
@@ -133,15 +141,21 @@ namespace Assessment2_Ict638
             TextView ALocation = v.FindViewById<TextView>(Resource.Id.HtvLocation);
             TextView Description = v.FindViewById<TextView>(Resource.Id.HtvDescription);
 
+            // heading = "House name : " + data.GetString("heading");
+            // numberofroom = data.GetString("numberofroom");
+            //numberoftoilet = data.GetString("numberoftoilet");
+            // rentfee = data.GetString("rentfee");
+            // location = data.GetString("location");
+            // agencyname = "Agency name : " + data.GetString("agencyname");
+            // description = "Description " + data.GetString("description");
 
-
-            Heading.Text = h;
-            Numberofroom.Text = nr;
-            Numberoftoilet.Text = nt;
-            Rentfee.Text = r;
-            nAgency.Text = an;
-            ALocation.Text = l;
-            Description.Text = d;
+            Heading.Text = "House name : " + hList[0].heading;
+            Numberofroom.Text = hList[0].numberofroom;
+            Numberoftoilet.Text = hList[0].numberoftoilet;
+            Rentfee.Text = hList[0].rentfee;
+            nAgency.Text = "Agency name : " + agencies[0].agencyname;
+            ALocation.Text = hList[0].location;
+            Description.Text = "Description " + hList[0].description;
 
 
 
@@ -179,8 +193,8 @@ namespace Assessment2_Ict638
 
             try
             {
-                string text = "Hi, I am interested in the house at" + l + "you have posted for rent. Could I please have more details?";
-                string recipient = anum;
+                string text = "Hi, I am interested in the house at" + hList[0].location + "you have posted for rent. Could I please have more details?";
+                string recipient = agencies[0].agencyphonenumber;
                 var message = new SmsMessage(text, new[] { recipient });
                 await Sms.ComposeAsync(message);
             }
@@ -191,10 +205,12 @@ namespace Assessment2_Ict638
         }
         private async void BtnShare_Click(object sender, EventArgs e)
         {
-            string locDetails = "";
-            locDetails = h + nr + nt + r + l;
+            string locDetails = "House name : " + hList[0].heading + ", " + hList[0].numberofroom + ", " + hList[0].numberoftoilet + ", " + hList[0].rentfee + ", " + hList[0].location;
             await ShareText(locDetails);
         }
+
+     
+
 
         public async Task ShareText(string text)
         {
@@ -310,7 +326,7 @@ namespace Assessment2_Ict638
             Console.WriteLine("Test - LastLoc");
             try
             {
-                var address = l;
+                var address = hList[0].location;
                 var locations = await Geocoding.GetLocationsAsync(address);
                 var location = locations?.FirstOrDefault();
                 if (location != null)
@@ -329,7 +345,7 @@ namespace Assessment2_Ict638
 
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.SetPosition(new LatLng(location.Latitude, location.Longitude));
-                    markerOptions.SetTitle(h);
+                    markerOptions.SetTitle(hList[0].heading);
 
                     googleMap.AddMarker(markerOptions);
 

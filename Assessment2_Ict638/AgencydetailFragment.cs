@@ -19,23 +19,32 @@ namespace Assessment2_Ict638
     public class AgencydetailFragment : Fragment, IOnMapReadyCallback
     {
         GoogleMap gMap;
-        
-       
-        string An;
-        string Ap;
-        string Am;
-        string Al;
-        string l;
-        string n;
+        List<Data> houses;
+        List<Agency> agencies;
+        string uname;
+        string uphone;
+
+        //string An;
+        //string Ap;
+        //string Am;
+        //string Al;
+        //string l;
+        // string n;
 
 
-        public AgencydetailFragment(string agencyname, string agencyphonenumber, string agencyemail, string agencylocation)// , string name, string location)
+        public AgencydetailFragment(List<Agency> A, string username, string userphone)
         {
-            An = agencyname; Ap = agencyphonenumber; Am = agencyemail; Al = agencylocation;// l = location; n = name;
+            agencies = A;
+            uname = username;
+            uphone = userphone;
 
         }
 
-        
+        /*public AgencydetailFragment(string agencyname, string agencyphonenumber, string agencyemail, string agencylocation)// , string name, string location)
+        {
+            An = agencyname; Ap = agencyphonenumber; Am = agencyemail; Al = agencylocation;// l = location; n = name;
+
+        }*/
 
 
 
@@ -56,10 +65,10 @@ namespace Assessment2_Ict638
             TextView AEmail = v.FindViewById<TextView>(Resource.Id.Aemail);
             TextView Alocation = v.FindViewById<TextView>(Resource.Id.Alocation);
 
-            Name.Text = An;
-            Phonenumber.Text = Ap;
-            AEmail.Text = Am;
-            Alocation.Text = Al;
+            Name.Text = agencies[0].agencyname;
+            Phonenumber.Text = agencies[0].agencyphonenumber;
+            AEmail.Text = agencies[0].agencyemail;
+            Alocation.Text = agencies[0].agencylocation;
 
 
             var mapFrag = MapFragment.NewInstance();
@@ -88,8 +97,8 @@ namespace Assessment2_Ict638
 
             try
             {
-                string text = "Hi, I am" +n+ "saw your details on the Rent-a-go app. Could you please send me details of more houses for rent in the same price range?";
-                string recipient = Ap;
+                string text = "Hi, I am" + uname + "saw your details on the Rent-a-go app. Could you please send me details of more houses for rent in the same price range?";
+                string recipient = agencies[0].agencyphonenumber;
                 var message = new SmsMessage(text, new[] { recipient });
                 await Sms.ComposeAsync(message);
             }
@@ -101,7 +110,7 @@ namespace Assessment2_Ict638
         private async void BtnShare_Click(object sender, EventArgs e)
         {
             string ADetails = "";
-            ADetails = An+Am+Ap+Al;
+            ADetails = agencies[0].agencyname +agencies[0].agencyemail +agencies[0].agencyphonenumber +agencies[0].agencylocation ;
             await ShareText(ADetails);
         }
 
@@ -124,7 +133,7 @@ namespace Assessment2_Ict638
             googleMap.UiSettings.CompassEnabled = true;
 
             getLastLocation(googleMap);
-            getLocation(googleMap);
+            //getLocation(googleMap);
 
 
 
@@ -151,7 +160,7 @@ namespace Assessment2_Ict638
             try
             {
 
-                var address = Al;
+                var address = agencies[0].agencylocation;
                 var locations = await Geocoding.GetLocationsAsync(address);
                 var location = locations?.FirstOrDefault();
 
@@ -171,7 +180,7 @@ namespace Assessment2_Ict638
 
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.SetPosition(new LatLng(location.Latitude, location.Longitude));
-                    markerOptions.SetTitle(An);
+                    markerOptions.SetTitle(agencies[0].agencyname);
 
                     googleMap.AddMarker(markerOptions);
 
@@ -229,7 +238,7 @@ namespace Assessment2_Ict638
 
         }
 
-        public async void getLocation(GoogleMap googleMap)
+        /*public async void getLocation(GoogleMap googleMap)
         {
             Console.WriteLine("Test - Location");
             try
@@ -251,7 +260,7 @@ namespace Assessment2_Ict638
 
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.SetPosition(new LatLng(location.Latitude, location.Longitude));
-                    markerOptions.SetTitle(An);
+                    markerOptions.SetTitle(agencies[0].agencyname);
 
                     googleMap.AddMarker(markerOptions);
 
@@ -309,7 +318,7 @@ namespace Assessment2_Ict638
             {
                 getLastLocation(googleMap);
             }
-        }
+        }*/
 
 
     }
