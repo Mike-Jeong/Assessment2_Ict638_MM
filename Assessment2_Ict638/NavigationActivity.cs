@@ -59,8 +59,12 @@ namespace Assessment2_Ict638
 
                     navFragContainer.RemoveAllViewsInLayout();
 
+
+
                   
-                    AgencydetailFragment aFrag = new AgencydetailFragment(agencies, data.GetString("uname"), data.GetString("uphone"));
+                    AgencydetailFragment aFrag = new AgencydetailFragment(agencies, data.GetString("uname"), data.GetString("uphone"), data.GetString("hlocation"));
+
+                    
 
                     transaction = FragmentManager.BeginTransaction();
                     transaction.Replace(Resource.Id.navFragContainer, aFrag);

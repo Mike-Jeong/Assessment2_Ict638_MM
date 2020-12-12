@@ -151,12 +151,14 @@ namespace Assessment2_Ict638
             Intent i = new Intent(this, typeof(NavigationActivity));
             string uname = bundle.GetString("username");
             string uphone = bundle.GetString("phonenumber");
+            
             Bundle bundle2 = new Bundle();
             i.PutExtra("ListItem", JsonConvert.SerializeObject(dList));
 
             bundle2.PutInt("photoid", photoNum);
             bundle2.PutString("uname", uname);
             bundle2.PutString("uphone", uphone);
+           
 
             /* bundle2.PutString("heading", dList[e].heading);
              bundle2.PutString("description", dList[e].description);
