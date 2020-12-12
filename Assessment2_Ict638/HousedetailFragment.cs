@@ -27,6 +27,7 @@ namespace Assessment2_Ict638
         
        int photonum;
        int id;
+       int hid;
        List<Data> hList;
        List<Agency> agencies;
 
@@ -62,6 +63,7 @@ namespace Assessment2_Ict638
         public void getph(int n)
         {
             photonum = n;
+            hid = n;
 
             switch (photonum)
             {
@@ -149,13 +151,13 @@ namespace Assessment2_Ict638
             // agencyname = "Agency name : " + data.GetString("agencyname");
             // description = "Description " + data.GetString("description");
 
-            Heading.Text = "House name : " + hList[0].heading;
-            Numberofroom.Text = hList[0].numberofroom;
-            Numberoftoilet.Text = hList[0].numberoftoilet;
-            Rentfee.Text = hList[0].rentfee;
+            Heading.Text = "House name : " + hList[hid-1].heading;
+            Numberofroom.Text = hList[hid-1].numberofroom;
+            Numberoftoilet.Text = hList[hid-1].numberoftoilet;
+            Rentfee.Text = hList[hid-1].rentfee;
             nAgency.Text = "Agency name : " + agencies[0].agencyname;
-            ALocation.Text = hList[0].location;
-            Description.Text = "Description " + hList[0].description;
+            ALocation.Text = hList[hid-1].location;
+            Description.Text = "Description " + hList[hid-1].description;
 
 
 
@@ -193,7 +195,7 @@ namespace Assessment2_Ict638
 
             try
             {
-                string text = "Hi, I am interested in the house at" + hList[0].location + "you have posted for rent. Could I please have more details?";
+                string text = "Hi, I am interested in the house at" + hList[hid-1].location + "you have posted for rent. Could I please have more details?";
                 string recipient = agencies[0].agencyphonenumber;
                 var message = new SmsMessage(text, new[] { recipient });
                 await Sms.ComposeAsync(message);
@@ -205,7 +207,7 @@ namespace Assessment2_Ict638
         }
         private async void BtnShare_Click(object sender, EventArgs e)
         {
-            string locDetails = "House name : " + hList[0].heading + ", " + hList[0].numberofroom + ", " + hList[0].numberoftoilet + ", " + hList[0].rentfee + ", " + hList[0].location;
+            string locDetails = "House name : " + hList[id - 1].heading + ", " + hList[hid-1].numberofroom + ", " + hList[hid-1].numberoftoilet + ", " + hList[hid-1].rentfee + ", " + hList[hid-1].location;
             await ShareText(locDetails);
         }
 
@@ -326,7 +328,7 @@ namespace Assessment2_Ict638
             Console.WriteLine("Test - LastLoc");
             try
             {
-                var address = hList[0].location;
+                var address = hList[hid-1].location;
                 var locations = await Geocoding.GetLocationsAsync(address);
                 var location = locations?.FirstOrDefault();
                 if (location != null)
@@ -345,7 +347,7 @@ namespace Assessment2_Ict638
 
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.SetPosition(new LatLng(location.Latitude, location.Longitude));
-                    markerOptions.SetTitle(hList[0].heading);
+                    markerOptions.SetTitle(hList[id - 1].heading);
 
                     googleMap.AddMarker(markerOptions);
 

@@ -152,7 +152,7 @@ namespace Assessment2_Ict638
             string uname = bundle.GetString("username");
             string uphone = bundle.GetString("phonenumber");
             Bundle bundle2 = new Bundle();
-            i.PutExtra("ListItem", JsonConvert.SerializeObject(dList[e]));
+            i.PutExtra("ListItem", JsonConvert.SerializeObject(dList));
 
             bundle2.PutInt("photoid", photoNum);
             bundle2.PutString("uname", uname);

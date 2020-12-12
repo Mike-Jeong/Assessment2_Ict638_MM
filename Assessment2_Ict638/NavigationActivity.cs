@@ -29,9 +29,10 @@ namespace Assessment2_Ict638
     {
         [System.Obsolete]
 
-        List<Data> hList;
-        List<Agency> agencies;
-        List<Agency> hagency;
+        List<Data> hList = new List<Data>();
+        List<Agency> agencies = new List<Agency>();
+        List<Agency> hagency = new List<Agency>();
+        int id;
 
 
 
@@ -86,7 +87,7 @@ namespace Assessment2_Ict638
             FragmentTransaction transaction = FragmentManager.BeginTransaction();
 
             hList = JsonConvert.DeserializeObject<List<Data>>(Intent.GetStringExtra("ListItem"));
-
+            id = data.GetInt("photoid") - 1;
 
             bool staus = false;
             string url = "https://10.0.2.2:5001/api/Agencies";
@@ -98,7 +99,7 @@ namespace Assessment2_Ict638
 
             for (int i = 0; i < agencies.Count; i++)
             {
-                if (agencies[i].agencyname == hList[0].agencyname)
+                if (agencies[i].agencyname == hList[id].agencyname)
                 {
                      hagency.Add(agencies[i]);
                 }
