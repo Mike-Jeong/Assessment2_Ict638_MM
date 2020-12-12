@@ -23,6 +23,7 @@ namespace Assessment2_Ict638
         List<Agency> agencies;
         string uname;
         string uphone;
+        
 
         //string An;
         //string Ap;
@@ -32,11 +33,13 @@ namespace Assessment2_Ict638
         // string n;
 
 
-        public AgencydetailFragment(List<Agency> A, string username, string userphone)
+        public AgencydetailFragment(List<Agency> A, string username, string userphone, string location)
         {
             agencies = A;
             uname = username;
             uphone = userphone;
+            hlocation = location;
+
 
         }
 
@@ -133,8 +136,9 @@ namespace Assessment2_Ict638
             googleMap.UiSettings.CompassEnabled = true;
 
             getLastLocation(googleMap);
+            houseLocation(googleMap);
             //getLocation(googleMap);
-
+            
 
 
             //LatLng loc = new LatLng(lasLoc);
@@ -238,31 +242,35 @@ namespace Assessment2_Ict638
 
         }
 
-        /*public async void getLocation(GoogleMap googleMap)
+        public async void houseLocation(GoogleMap googleMap)
         {
-            Console.WriteLine("Test - Location");
+            Console.WriteLine("Test - houseLocation");
             try
-            {
-                var address = l ;
-                var locations = await Geocoding.GetLocationsAsync(address);
-                var location = locations?.FirstOrDefault();
-
-                if (location != null)
+            { for(int n=0;n<houses.Count;n++)
                 {
-                    Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}");
-                    CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
-                    builder.Target(new LatLng(location.Latitude, location.Longitude));
-                    builder.Zoom(20);
-                    builder.Bearing(155);
-                    builder.Tilt(80);
+                    if (houses[n].agencyname == agencies[n].agencyname)
+                    {
+                          
+                        var address = houses[n].location;
+                        var locations = await Geocoding.GetLocationsAsync(address);
+                        var location = locations?.FirstOrDefault();
 
+                        if (location != null)
+                        {
+                            Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}");
+                            //CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
+                            //builder.Target(new LatLng(location.Latitude, location.Longitude));
+                            //builder.Zoom(20);
+                            //builder.Bearing(155);
+                            //builder.Tilt(80);
 
+                            MarkerOptions markerOptions = new MarkerOptions();
+                            markerOptions.SetPosition(new LatLng(location.Latitude, location.Longitude));
+                            markerOptions.SetTitle(houses[n].heading);
 
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.SetPosition(new LatLng(location.Latitude, location.Longitude));
-                    markerOptions.SetTitle(agencies[0].agencyname);
-
-                    googleMap.AddMarker(markerOptions);
+                            googleMap.AddMarker(markerOptions);
+                        }
+                    }
 
                     //var request = new GeolocationRequest(GeolocationAccuracy.Medium);
                     //var location = await Geolocation.GetLocationAsync(request);
@@ -296,29 +304,29 @@ namespace Assessment2_Ict638
                     //    googleMap.AddMarker(curLoc);
 
                 }
+            
+
             }
-
-
             catch (FeatureNotSupportedException fnsEx)
             {
                 // Handle not supported on device exception
                 Toast.MakeText(Activity, "Feature Not Supported", ToastLength.Short);
             }
-            catch (FeatureNotEnabledException fneEx)
-            {
+            //catch (FeatureNotEnabledException fneEx)
+            //{
                 // Handle not enabled on device exception
-                Toast.MakeText(Activity, "Feature Not Enabled", ToastLength.Short);
-            }
-            catch (PermissionException pEx)
-            {
+                //Toast.MakeText(Activity, "Feature Not Enabled", ToastLength.Short);
+            //}
+            //catch (PermissionException pEx)
+            //{
                 // Handle permission exception
-                Toast.MakeText(Activity, "Needs more permission", ToastLength.Short);
-            }
+                //Toast.MakeText(Activity, "Needs more permission", ToastLength.Short);
+            // }
             catch (Exception ex)
             {
                 getLastLocation(googleMap);
             }
-        }*/
+        }
 
 
     }

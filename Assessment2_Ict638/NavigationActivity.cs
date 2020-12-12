@@ -32,7 +32,7 @@ namespace Assessment2_Ict638
         List<Data> hList;
         List<Agency> agencies;
         List<Agency> hagency;
-
+        
 
 
         public bool OnNavigationItemSelected(IMenuItem item)
@@ -58,8 +58,12 @@ namespace Assessment2_Ict638
 
                     navFragContainer.RemoveAllViewsInLayout();
 
+
+
                   
-                    AgencydetailFragment aFrag = new AgencydetailFragment(agencies, data.GetString("uname"), data.GetString("uphone"));
+                    AgencydetailFragment aFrag = new AgencydetailFragment(agencies, data.GetString("uname"), data.GetString("uphone"), data.GetString("hlocation"));
+
+                    
 
                     transaction = FragmentManager.BeginTransaction();
                     transaction.Replace(Resource.Id.navFragContainer, aFrag);
