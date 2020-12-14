@@ -81,10 +81,6 @@ namespace Assessment2_Ict638
             }
             
 
-
-            /*  Intent homeActivity = new Intent(this, typeof(HomeActivity));
-            StartActivity(homeActivity);*/
-
         }
 
         private bool checkLogin(string uname, string pass, out int id, out string name, out string username, out string password, out string phonenumber, out string country, out string email)

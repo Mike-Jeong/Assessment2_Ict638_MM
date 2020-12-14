@@ -83,18 +83,25 @@
         android:weightSum="6">
 
 
-        <Button
+       <Button
             android:id="@+id/btnAShare"
-            android:text="Share Agency detail"
+            android:text="Share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" 
             android:layout_weight="2"/>
 
         <Button
             android:id="@+id/btnASMS"
-            android:text="Wanna see other houses?"
+            android:text="SMS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" 
+            android:layout_weight="2"/>
+
+        <Button
+            android:id="@+id/btnAShow"
+            android:text="Show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="2"/>
 
          //button house delete

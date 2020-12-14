@@ -32,6 +32,7 @@ namespace Assessment2_Ict638
         List<Data> hList = new List<Data>();
         List<Agency> agencies = new List<Agency>();
         List<Agency> hagency = new List<Agency>();
+        FragmentTransaction transaction;
         int id;
 
 
@@ -39,7 +40,6 @@ namespace Assessment2_Ict638
         public bool OnNavigationItemSelected(IMenuItem item)
         {
             FrameLayout navFragContainer = FindViewById<FrameLayout>(Resource.Id.navFragContainer);
-            FragmentTransaction transaction;
             Bundle data = Intent.GetBundleExtra("data");
 
             
@@ -50,7 +50,8 @@ namespace Assessment2_Ict638
                     HousedetailFragment sFrag = new HousedetailFragment(hList, hagency);
                     sFrag.getph(data.GetInt("photoid"));
                     transaction = FragmentManager.BeginTransaction();
-                    transaction.Replace(Resource.Id.navFragContainer, sFrag);
+                    transaction.Replace(Resource.Id.navFragContainer, sFrag, "Hd");
+                    //transaction.AddToBackStack("Hd");
                     transaction.Commit();
 
                     return true;
@@ -62,12 +63,12 @@ namespace Assessment2_Ict638
 
 
                   
-                    AgencydetailFragment aFrag = new AgencydetailFragment(agencies, data.GetString("uname"), data.GetString("uphone"), data.GetString("hlocation"));
+                    AgencydetailFragment aFrag = new AgencydetailFragment(agencies, hList, data.GetString("uname"), data.GetString("uphone"), data.GetString("hlocation"));
 
                     
 
                     transaction = FragmentManager.BeginTransaction();
-                    transaction.Replace(Resource.Id.navFragContainer, aFrag);
+                    transaction.Replace(Resource.Id.navFragContainer, aFrag, "Ad");
                     transaction.Commit();
 
                     return true;
@@ -88,7 +89,7 @@ namespace Assessment2_Ict638
             BottomNavigationView navigationView = FindViewById<BottomNavigationView>(Resource.Id.TopNavBar);
             navigationView.SetOnNavigationItemSelectedListener(this);
 
-            FragmentTransaction transaction = FragmentManager.BeginTransaction();
+            transaction = FragmentManager.BeginTransaction();
 
             hList = JsonConvert.DeserializeObject<List<Data>>(Intent.GetStringExtra("ListItem"));
             id = data.GetInt("photoid") - 1;
@@ -116,19 +117,9 @@ namespace Assessment2_Ict638
 
 
 
-
-
             navigationView.SelectedItemId = Resource.Id.menu1;
 
 
- // sFrag. PutExtra("data", data);
-            // heading = "House name : " + data.GetString("heading");
-            // numberofroom = data.GetString("numberofroom");
-            //numberoftoilet = data.GetString("numberoftoilet");
-            // rentfee = data.GetString("rentfee");
-            // location = data.GetString("location");
-            // agencyname = "Agency name : " + data.GetString("agencyname");
-            // description = "Description " + data.GetString("description");
         }
 
 

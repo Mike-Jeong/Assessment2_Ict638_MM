@@ -13,6 +13,7 @@ using Android.Util;
 using Android.Gms.Maps;
 using Xamarin.Essentials;
 using Android.Gms.Maps.Model;
+using System.Threading.Tasks;
 
 namespace Assessment2_Ict638
 {
@@ -20,7 +21,7 @@ namespace Assessment2_Ict638
     public class ProfileActivity : Activity, IOnMapReadyCallback
     {
         int userid;
-       
+        Bundle bundle;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -28,7 +29,7 @@ namespace Assessment2_Ict638
             // Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             // Create your application here
             SetContentView(Resource.Layout.activity_userprofile);
-            Bundle bundle = Intent.GetBundleExtra("data");
+            bundle = Intent.GetBundleExtra("data");
             userid = bundle.GetInt("id");
 
             EditText et = FindViewById<EditText>(Resource.Id.Pname);
@@ -48,9 +49,13 @@ namespace Assessment2_Ict638
 
             // Delete the logout and current location
             Button btnPModify = FindViewById<Button>(Resource.Id.btnPModify);
-            
+            Button btnPSMS = FindViewById<Button>(Resource.Id.btnPSMS);
+            Button btnPShare = FindViewById<Button>(Resource.Id.btnPShare);
 
             btnPModify.Click += BtnPModify_Click;
+            btnPShare.Click += BtnPShare_Click;
+            btnPSMS.Click += BtnPSMS_Click;
+
 
 
             FrameLayout mapFragContainer = FindViewById<FrameLayout>(Resource.Id.PMapFrgContainer);
@@ -63,7 +68,30 @@ namespace Assessment2_Ict638
 
         }
 
-        
+        private async void BtnPSMS_Click(object sender, EventArgs e)
+        {
+            string text = "Hi, Please find my contact details as requested.Email: " + bundle.GetString("email") + " Phone Number: " + bundle.GetString("phonenumber");
+            string recipient = "0226329826";
+            var message = new SmsMessage(text, new[] { recipient });
+            await Sms.ComposeAsync(message);
+        }
+
+        private async void BtnPShare_Click(object sender, EventArgs e)
+        {
+            string UDetails = "";
+            UDetails = bundle.GetString("name") + bundle.GetString("phonenumber") + bundle.GetString("email");
+            await ShareText(UDetails);
+        }
+
+        public async Task ShareText(string text)
+        {
+            await Share.RequestAsync(new ShareTextRequest
+            {
+                Text = text,
+                Title = "User Detail Share"
+            });
+        }
+
 
         private void BtnPModify_Click(object sender, EventArgs e)
         {
@@ -120,8 +148,7 @@ namespace Assessment2_Ict638
 
         public void OnMapReady(GoogleMap googleMap)
         {
-            //throw new NotImplementedException();
-        
+           
             gMap = googleMap;
             googleMap.MapType = GoogleMap.MapTypeNormal;
             googleMap.UiSettings.ZoomControlsEnabled = true;
@@ -129,23 +156,7 @@ namespace Assessment2_Ict638
 
             getCurLocation(googleMap);
 
-            //LatLng loc = new LatLng(lasLoc);
-            //CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
-            //builder.Target(loc);
-            //builder.Zoom(20);
-            //builder.Tilt(65);
-
-            //CameraPosition cPos = builder.Build();
-            //CameraUpdate cameraUpdate = CameraUpdateFactory.NewCameraPosition(cPos);
-            //googleMap.MoveCamera(cameraUpdate);
-
-            //MarkerOptions markerOptions = new MarkerOptions();
-            //markerOptions.SetPosition(loc);
-            //markerOptions.SetTitle("NZSE City Campus");
-
-            //googleMap.AddMarker(markerOptions);
-
-            
+                       
         }
 
         public async void getCurLocation(GoogleMap googleMap)

@@ -95,7 +95,7 @@
         android:id="@+id/PMapFrgContainer"
         android:layout_below="@id/ProfilelinearLayout1"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="125dp"
         />
 
     <LinearLayout
@@ -104,7 +104,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
       
         <Button
@@ -112,8 +112,19 @@
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:text="Modify" />
+
+        <Button
+            android:id="@+id/btnPShare"  
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Share" />
+
+        <Button
+            android:id="@+id/btnPSMS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SMS"/>
 
 
 

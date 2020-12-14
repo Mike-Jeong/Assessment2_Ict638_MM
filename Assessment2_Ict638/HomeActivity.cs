@@ -29,7 +29,7 @@ namespace Assessment2_Ict638
 /// //
 /// </summary>
     [Activity(Label = "Rent A Go")]
-    public class HomeActivity : AppCompatActivity //, Android.Support.V7.Widget.Toolbar.IOnMenuItemClickListener
+    public class HomeActivity : AppCompatActivity 
     {
         public const string TAG = "HomeActivity";
         internal static readonly string CHANNEL_ID = "ict638assessment_notification_channel";
@@ -84,13 +84,7 @@ namespace Assessment2_Ict638
 
         private void putData()
         {
-           /* dList.Add(new Data("Database", "This is the database description"));
-            dList.Add(new Data("Programming", "This is the programming description"));
-            dList.Add(new Data("GitHub", "This is the github description"));
-            dList.Add(new Data("Math", "This is Math description"));
-            dList.Add(new Data("MongoDB", "This is MongoDB description"));
-            dList.Add(new Data("C#", "This is a C# description"));*/
-
+        
             string url = "https://10.0.2.2:5001/api/Data";
             string response = APIConnect.Get(url);
             dList = JsonConvert.DeserializeObject<List<Data>>(response);
@@ -119,13 +113,9 @@ namespace Assessment2_Ict638
             IsPlayServicesAvailable();
             CreateNotificationChannel();
 
-            //Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
-            //SetSupportActionBar(toolbar);
-
+      
             Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
       
-            //toolbar.SetOnMenuItemClickListener(this);
-            //SetSupportActionBar(toolbar);
 
             mPhotoAlbum = new PhotoAlbum();
             putData();
@@ -160,16 +150,8 @@ namespace Assessment2_Ict638
             bundle2.PutString("uphone", uphone);
            
 
-            /* bundle2.PutString("heading", dList[e].heading);
-             bundle2.PutString("description", dList[e].description);
-             bundle2.PutString("numberofroom", dList[e].numberofroom);
-             bundle2.PutString("numberoftoilet", dList[e].numberoftoilet);
-             bundle2.PutString("rentfee", dList[e].rentfee);
-             bundle2.PutString("location", dList[e].location);
-             bundle2.PutString("agencyname", dList[e].agencyname);*/
-
-
-             i.PutExtra("data", bundle2);
+   
+            i.PutExtra("data", bundle2);
 
             StartActivity(i);
 
@@ -220,42 +202,6 @@ namespace Assessment2_Ict638
             return base.OnOptionsItemSelected(item);
         }
 
-       /* public bool OnMenuItemClick(IMenuItem item)
-        {
-            switch (item.ItemId)
-            {
-                case Resource.Id.EditProfile:
-                    Intent newActivity = new Intent(this, typeof(ProfileActivity));
-                    Bundle bundle = Intent.GetBundleExtra("data");
-                    newActivity.PutExtra("data", bundle);
-
-
-                    StartActivity(newActivity);
-                    return true;
-                case Resource.Id.Logout:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-                    builder.SetTitle("Logout?");
-                    builder.SetMessage("Are you sure you want to log out of the app?\n(Go to the Login page after the logout.)");
-                    builder.SetPositiveButton("OK", (c, ev) =>
-                    {
-
-                        Intent LoginActivity = new Intent(this, typeof(LoginActivity));
-                        StartActivity(LoginActivity);
-                        FinishAffinity();
-
-                    });
-                    builder.SetNegativeButton("Cancel", (c, ev) =>
-                    {
-                        builder.Dispose();
-                    });
-                    builder.Create().Show();
-                    return true;
-
-
-            }
-            return false;
-        }*/
-
+       
     }
 }

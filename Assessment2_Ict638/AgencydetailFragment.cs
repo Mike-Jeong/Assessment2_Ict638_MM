@@ -23,18 +23,14 @@ namespace Assessment2_Ict638
         List<Agency> agencies;
         string uname;
         string uphone;
+        string hlocation;
         
 
-        //string An;
-        //string Ap;
-        //string Am;
-        //string Al;
-        //string l;
-        // string n;
-
-
-        public AgencydetailFragment(List<Agency> A, string username, string userphone, string location)
+     
+        public AgencydetailFragment(List<Agency> A, List<Data> H, string username, string userphone, string location)
         {
+
+            houses = H;
             agencies = A;
             uname = username;
             uphone = userphone;
@@ -43,12 +39,7 @@ namespace Assessment2_Ict638
 
         }
 
-        /*public AgencydetailFragment(string agencyname, string agencyphonenumber, string agencyemail, string agencylocation)// , string name, string location)
-        {
-            An = agencyname; Ap = agencyphonenumber; Am = agencyemail; Al = agencylocation;// l = location; n = name;
-
-        }*/
-
+       
 
 
         public override void OnCreate(Bundle savedInstanceState)
@@ -84,14 +75,50 @@ namespace Assessment2_Ict638
 
             Button btnShare = v.FindViewById<Button>(Resource.Id.btnAShare);
             Button btnSMS = v.FindViewById<Button>(Resource.Id.btnASMS);
+            Button btnShow = v.FindViewById<Button>(Resource.Id.btnAShow);
 
             btnShare.Click += BtnShare_Click;
             btnSMS.Click += BtnSMS_Click;
+            btnShow.Click += BtnShow_Click; 
 
             return v;
         }
 
-         
+        private void BtnShow_Click(object sender, EventArgs e)
+        {
+
+            markhouses(gMap);
+            
+        }
+
+        public async void markhouses(GoogleMap googleMap)
+        {
+
+            for (int i = 0; i < houses.Count; i++)
+            {
+                if (agencies[0].agencyname == houses[i].agencyname)
+                {
+                    var location = (await Geocoding.GetLocationsAsync(string.Format("$\"{0}\"", houses[i].location))).FirstOrDefault();
+
+                    if (location == null) return;
+                    LatLng loc = new LatLng(location.Latitude, location.Longitude);
+
+
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.SetPosition(loc);
+                    markerOptions.SetTitle(string.Format("{0}", houses[i].heading));
+
+                    googleMap.AddMarker(markerOptions);
+                }
+              
+
+            }
+
+
+           
+        }
+
+
 
         private async void BtnSMS_Click(object sender, EventArgs e)
         {
@@ -130,35 +157,22 @@ namespace Assessment2_Ict638
 
         public void OnMapReady(GoogleMap googleMap)
         {
-            gMap = googleMap;
+           
             googleMap.MapType = GoogleMap.MapTypeNormal;
             googleMap.UiSettings.ZoomControlsEnabled = true;
             googleMap.UiSettings.CompassEnabled = true;
-
-            getLastLocation(googleMap);
-            houseLocation(googleMap);
-            //getLocation(googleMap);
             
 
 
-            //LatLng loc = new LatLng(lasLoc);
-            //CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
-            //builder.Target(loc);
-            //builder.Zoom(20);
-            //builder.Tilt(65);
 
-            //CameraPosition cPos = builder.Build();
-            //CameraUpdate cameraUpdate = CameraUpdateFactory.NewCameraPosition(cPos);
-            //googleMap.MoveCamera(cameraUpdate);
+            getAgencyLocation(googleMap);
+            gMap = googleMap;
 
-            //MarkerOptions markerOptions = new MarkerOptions();
-            //markerOptions.SetPosition(loc);
-            //markerOptions.SetTitle("NZSE City Campus");
 
-            //googleMap.AddMarker(markerOptions);
+            
         }
 
-        public async void getLastLocation(GoogleMap googleMap)
+        public async void getAgencyLocation(GoogleMap googleMap)
         {
             Console.WriteLine("Test - LastLoc");
             try
@@ -185,37 +199,12 @@ namespace Assessment2_Ict638
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.SetPosition(new LatLng(location.Latitude, location.Longitude));
                     markerOptions.SetTitle(agencies[0].agencyname);
+                    markerOptions.SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueGreen));
+
 
                     googleMap.AddMarker(markerOptions);
 
-                    //var location = await Geolocation.GetLastKnownLocationAsync();
-                    //if (location != null)
-                    //{
-                    //    Console.WriteLine($"Last Loc - Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
-                    //    MarkerOptions curLoc = new MarkerOptions();
-                    //    curLoc.SetPosition(new LatLng(location.Latitude, location.Longitude));
-                    //    var address = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude);
-                    //    var placemark = address?.FirstOrDefault();
-                    //    var geocodeAddress = "";
-                    //    if (placemark != null)
-                    //    {
-                    //        geocodeAddress =
-                    //        $"AdminArea: {placemark.AdminArea}\n" +
-                    //        $"CountryCode: {placemark.CountryCode}\n" +
-                    //        $"CountryName: {placemark.CountryName}\n" +
-                    //        $"FeatureName: {placemark.FeatureName}\n" +
-                    //        $"Locality: {placemark.Locality}\n" +
-                    //        $"PostalCode: {placemark.PostalCode}\n" +
-                    //        $"SubAdminArea: {placemark.SubAdminArea}\n" +
-                    //        $"SubLocality: {placemark.SubLocality}\n" +
-                    //        $"SubThoroughfare: {placemark.SubThoroughfare}\n" +
-                    //        $"Thoroughfare: {placemark.Thoroughfare}\n";
-
-                    //    }
-                    //    curLoc.SetTitle("You were here" + geocodeAddress);
-                    //    curLoc.SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueAzure));
-                    //    googleMap.AddMarker(curLoc);
-                    //}
+                   
 
                 }
             }
@@ -224,16 +213,7 @@ namespace Assessment2_Ict638
                 // Handle not supported on device exception
                 Toast.MakeText(Activity, "Feature Not Supported", ToastLength.Short);
             }
-            //catch (FeatureNotEnabledException fneEx)
-            //{
-            //    // Handle not enabled on device exception
-            //    Toast.MakeText(Activity, "Feature Not Enabled", ToastLength.Short);
-            //}
-            //catch (PermissionException pEx)
-            //{
-            //    // Handle permission exception
-            //    Toast.MakeText(Activity, "Needs more permission", ToastLength.Short);
-            //}
+           
             catch (Exception ex)
             {
                 // Unable to get location
@@ -242,92 +222,7 @@ namespace Assessment2_Ict638
 
         }
 
-        public async void houseLocation(GoogleMap googleMap)
-        {
-            Console.WriteLine("Test - houseLocation");
-            try
-            { for(int n=0;n<houses.Count;n++)
-                {
-                    if (houses[n].agencyname == agencies[n].agencyname)
-                    {
-                          
-                        var address = houses[n].location;
-                        var locations = await Geocoding.GetLocationsAsync(address);
-                        var location = locations?.FirstOrDefault();
-
-                        if (location != null)
-                        {
-                            Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}");
-                            //CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
-                            //builder.Target(new LatLng(location.Latitude, location.Longitude));
-                            //builder.Zoom(20);
-                            //builder.Bearing(155);
-                            //builder.Tilt(80);
-
-                            MarkerOptions markerOptions = new MarkerOptions();
-                            markerOptions.SetPosition(new LatLng(location.Latitude, location.Longitude));
-                            markerOptions.SetTitle(houses[n].heading);
-
-                            googleMap.AddMarker(markerOptions);
-                        }
-                    }
-
-                    //var request = new GeolocationRequest(GeolocationAccuracy.Medium);
-                    //var location = await Geolocation.GetLocationAsync(request);
-
-                    //if (location != null)
-                    //{
-                    //    Console.WriteLine($"current Loc - Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
-                    //    MarkerOptions curLoc = new MarkerOptions();
-                    //    curLoc.SetPosition(new LatLng(location.Latitude, location.Longitude));
-                    //    var address = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude);
-                    //    var placemark = address?.FirstOrDefault();
-                    //    var geocodeAddress = "";
-                    //    if (placemark != null)
-                    //    {
-                    //        geocodeAddress =
-                    //        $"AdminArea: {placemark.AdminArea}\n" +
-                    //        $"CountryCode: {placemark.CountryCode}\n" +
-                    //        $"CountryName: {placemark.CountryName}\n" +
-                    //        $"FeatureName: {placemark.FeatureName}\n" +
-                    //        $"Locality: {placemark.Locality}\n" +
-                    //        $"PostalCode: {placemark.PostalCode}\n" +
-                    //        $"SubAdminArea: {placemark.SubAdminArea}\n" +
-                    //        $"SubLocality: {placemark.SubLocality}\n" +
-                    //        $"SubThoroughfare: {placemark.SubThoroughfare}\n" +
-                    //        $"Thoroughfare: {placemark.Thoroughfare}\n";
-
-                    //    }
-                    //    curLoc.SetTitle("You are here" + geocodeAddress);
-                    //    curLoc.SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueAzure));
-
-                    //    googleMap.AddMarker(curLoc);
-
-                }
-            
-
-            }
-            catch (FeatureNotSupportedException fnsEx)
-            {
-                // Handle not supported on device exception
-                Toast.MakeText(Activity, "Feature Not Supported", ToastLength.Short);
-            }
-            //catch (FeatureNotEnabledException fneEx)
-            //{
-                // Handle not enabled on device exception
-                //Toast.MakeText(Activity, "Feature Not Enabled", ToastLength.Short);
-            //}
-            //catch (PermissionException pEx)
-            //{
-                // Handle permission exception
-                //Toast.MakeText(Activity, "Needs more permission", ToastLength.Short);
-            // }
-            catch (Exception ex)
-            {
-                getLastLocation(googleMap);
-            }
-        }
-
+       
 
     }
 }
