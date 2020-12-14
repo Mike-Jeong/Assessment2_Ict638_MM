@@ -12,13 +12,13 @@ using Newtonsoft.Json;
 
 namespace Assessment2_Ict638
 {
-    class Agency
+   public class Agency
     {
         public string agencyname { get; set; }
         public string agencyemail { get; set; }
         public string agencyphonenumber { get; set; }
         public string agencylocation { get; set; }
-     
+
     }
 
 
@@ -30,63 +30,49 @@ namespace Assessment2_Ict638
         [System.Obsolete]
 
         List<Data> hList = new List<Data>();
+        List<Agency> agencies = new List<Agency>();
+        List<Agency> hagency = new List<Agency>();
+        FragmentTransaction transaction;
+        int id;
 
-        string heading;
-        string numberofroom;
-        string numberoftoilet;
-        string rentfee;
-        string location;
-        string agencyname;
-        string description;
 
 
         public bool OnNavigationItemSelected(IMenuItem item)
         {
             FrameLayout navFragContainer = FindViewById<FrameLayout>(Resource.Id.navFragContainer);
-            FragmentTransaction transaction;
             Bundle data = Intent.GetBundleExtra("data");
 
+            
             switch (item.ItemId)
             {
                 case Resource.Id.menu1:
 
-                    navFragContainer.RemoveAllViewsInLayout();
-                    HousedetailFragment sFrag = new HousedetailFragment(heading, numberofroom, numberoftoilet, rentfee, location, agencyname, description);
-                    
+                    HousedetailFragment sFrag = new HousedetailFragment(hList, hagency);
+                    sFrag.getph(data.GetInt("photoid"));
                     transaction = FragmentManager.BeginTransaction();
-                    transaction.Replace(Resource.Id.navFragContainer, sFrag);
+                    transaction.Replace(Resource.Id.navFragContainer, sFrag, "Hd");
+                    //transaction.AddToBackStack("Hd");
                     transaction.Commit();
 
                     return true;
 
                 case Resource.Id.menu2:
-                    
-                    bool staus = false;
-                    string url = "https://10.0.2.2:5001/api/Users";
-                    string response = APIConnect.Get(url);
-                    List<Agency> agencies = JsonConvert.DeserializeObject<List<Agency>>(response);
+
+                    navFragContainer.RemoveAllViewsInLayout();
 
 
-                    foreach (Agency agency in agencies)
-                    {
-                        if (agency.agencyname == data.GetString("agencyname"))
-                        {
-                            navFragContainer.RemoveAllViewsInLayout();
-                            AgencydetailFragment aFrag = new AgencydetailFragment(agency.agencyname, agency.agencyphonenumber, agency.agencyemail, agency.agencylocation);
 
-                            transaction = FragmentManager.BeginTransaction();
-                            transaction.Replace(Resource.Id.navFragContainer, aFrag);
-                            transaction.Commit();
+                  
+                    AgencydetailFragment aFrag = new AgencydetailFragment(agencies, hList, data.GetString("uname"), data.GetString("uphone"), data.GetString("hlocation"));
 
-                            break;
-                        }
-                    }
                     
 
-
+                    transaction = FragmentManager.BeginTransaction();
+                    transaction.Replace(Resource.Id.navFragContainer, aFrag, "Ad");
+                    transaction.Commit();
 
                     return true;
-               
+
             }
             return false;
         }
@@ -103,30 +89,39 @@ namespace Assessment2_Ict638
             BottomNavigationView navigationView = FindViewById<BottomNavigationView>(Resource.Id.TopNavBar);
             navigationView.SetOnNavigationItemSelectedListener(this);
 
-            FragmentTransaction transaction = FragmentManager.BeginTransaction();
+            transaction = FragmentManager.BeginTransaction();
 
-            // sFrag. PutExtra("data", data);
-            heading = "House name : " + data.GetString("heading");
-            numberofroom = data.GetString("numberofroom");
-            numberoftoilet = data.GetString("numberoftoilet");
-            rentfee = data.GetString("rentfee");
-            location = data.GetString("location");
-            agencyname = "Agency name : " + data.GetString("agencyname");
-            description = "Description " + data.GetString("description");
+            hList = JsonConvert.DeserializeObject<List<Data>>(Intent.GetStringExtra("ListItem"));
+            id = data.GetInt("photoid") - 1;
 
-            HousedetailFragment sFrag = new HousedetailFragment(heading, numberofroom, numberoftoilet, rentfee, location, agencyname, description);
+            bool staus = false;
+            string url = "https://10.0.2.2:5001/api/Agencies";
+            string response = APIConnect.Get(url);
+            agencies = JsonConvert.DeserializeObject<List<Agency>>(response);
+
+
+
+
+            for (int i = 0; i < agencies.Count; i++)
+            {
+                if (agencies[i].agencyname == hList[id].agencyname)
+                {
+                     hagency.Add(agencies[i]);
+                }
+            }
+            
+
+
+            HousedetailFragment sFrag = new HousedetailFragment(hList, hagency);
             sFrag.getph(data.GetInt("photoid"));
-          
-            
 
-            
+
 
             navigationView.SelectedItemId = Resource.Id.menu1;
-            
-    
+
 
         }
-        
+
 
     }
 }

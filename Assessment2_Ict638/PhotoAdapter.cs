@@ -12,7 +12,7 @@ using Android.Support.V7.Widget;
 
 namespace Assessment2_Ict638
 {
-    class Data
+    public class Data
     {
         public string heading { get; set; }
         public string description { get; set; }

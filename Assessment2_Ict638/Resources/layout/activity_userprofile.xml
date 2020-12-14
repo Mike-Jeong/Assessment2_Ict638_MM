@@ -22,7 +22,7 @@
         <EditText 
             android:id="@+id/Pname"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="35dp"
             android:padding="10dp"
             android:hint="Last Name, First Name"/>
 
@@ -35,7 +35,7 @@
         <EditText
             android:id="@+id/PPhonenumber"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="35dp"
             android:padding="10dp"
             android:hint="0211231234"/>
         
@@ -49,7 +49,7 @@
         <TextView
             android:id="@+id/Pemail"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="35dp"
             android:padding="10dp"/>
 
         <TextView
@@ -61,7 +61,7 @@
         <EditText
             android:id="@+id/PCountry"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="35dp"
             android:padding="10dp"/>
 
         <TextView
@@ -73,7 +73,7 @@
         <TextView
             android:id="@+id/Pusername"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="35dp"
             android:padding="10dp"/>
 
         <TextView
@@ -85,15 +85,22 @@
         <TextView
             android:id="@+id/Ppassword"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="35dp"
             android:padding="10dp"
             android:inputType="textPassword"/>
 
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/PMapFrgContainer"
+        android:layout_below="@id/ProfilelinearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        />
+
     <LinearLayout
         android:id="@+id/ProfilelinearLayout2"
-        android:layout_below="@id/ProfilelinearLayout1"
+        android:layout_below="@id/PMapFrgContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -102,24 +109,23 @@
       
         <Button
             android:id="@+id/btnPModify"
+            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Modify"/>
-        
+            android:text="Modify" />
+
         <Button
-            android:id="@+id/btnPLogout"
+            android:id="@+id/btnPShare"  
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Logout"/>
-        
+            android:text="Share" />
+
         <Button
-            android:id="@+id/btnPCloc"
+            android:id="@+id/btnPSMS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Check My Location"/>
+            android:text="SMS"/>
+
 
 
     </LinearLayout>

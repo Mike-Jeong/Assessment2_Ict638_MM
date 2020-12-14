@@ -9,13 +9,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Assessment2_Ict638.Models;
+using Android.Util;
+using Android.Gms.Maps;
+using Xamarin.Essentials;
+using Android.Gms.Maps.Model;
+using System.Threading.Tasks;
 
 namespace Assessment2_Ict638
 {
     [Activity(Label = "ProfileActivity")]
-    public class ProfileActivity : Activity
+    public class ProfileActivity : Activity, IOnMapReadyCallback
     {
         int userid;
+        Bundle bundle;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -23,7 +29,7 @@ namespace Assessment2_Ict638
             // Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             // Create your application here
             SetContentView(Resource.Layout.activity_userprofile);
-            Bundle bundle = Intent.GetBundleExtra("data");
+            bundle = Intent.GetBundleExtra("data");
             userid = bundle.GetInt("id");
 
             EditText et = FindViewById<EditText>(Resource.Id.Pname);
@@ -41,20 +47,51 @@ namespace Assessment2_Ict638
             tv1.Text = bundle.GetString("email");
 
 
+            // Delete the logout and current location
             Button btnPModify = FindViewById<Button>(Resource.Id.btnPModify);
-            Button btnPLogout = FindViewById<Button>(Resource.Id.btnPLogout);
-            Button btnPCloc = FindViewById<Button>(Resource.Id.btnPCloc);
-
-            btnPLogout.Click += BtnPLogout_Click;
+            Button btnPSMS = FindViewById<Button>(Resource.Id.btnPSMS);
+            Button btnPShare = FindViewById<Button>(Resource.Id.btnPShare);
 
             btnPModify.Click += BtnPModify_Click;
+            btnPShare.Click += BtnPShare_Click;
+            btnPSMS.Click += BtnPSMS_Click;
 
 
 
+            FrameLayout mapFragContainer = FindViewById<FrameLayout>(Resource.Id.PMapFrgContainer);
 
 
+            var mapFrag = MapFragment.NewInstance();
+            FragmentManager.BeginTransaction().Add(Resource.Id.PMapFrgContainer, mapFrag, "map").Commit();
+
+            mapFrag.GetMapAsync(this);
 
         }
+
+        private async void BtnPSMS_Click(object sender, EventArgs e)
+        {
+            string text = "Hi, Please find my contact details as requested.Email: " + bundle.GetString("email") + " Phone Number: " + bundle.GetString("phonenumber");
+            string recipient = "0226329826";
+            var message = new SmsMessage(text, new[] { recipient });
+            await Sms.ComposeAsync(message);
+        }
+
+        private async void BtnPShare_Click(object sender, EventArgs e)
+        {
+            string UDetails = "";
+            UDetails = bundle.GetString("name") + bundle.GetString("phonenumber") + bundle.GetString("email");
+            await ShareText(UDetails);
+        }
+
+        public async Task ShareText(string text)
+        {
+            await Share.RequestAsync(new ShareTextRequest
+            {
+                Text = text,
+                Title = "User Detail Share"
+            });
+        }
+
 
         private void BtnPModify_Click(object sender, EventArgs e)
         {
@@ -105,29 +142,97 @@ namespace Assessment2_Ict638
         }
 
 
+        GoogleMap gMap;
 
+        //May delete the logout in profile
 
-
-
-        private void BtnPLogout_Click(object sender, EventArgs e)
+        public void OnMapReady(GoogleMap googleMap)
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+           
+            gMap = googleMap;
+            googleMap.MapType = GoogleMap.MapTypeNormal;
+            googleMap.UiSettings.ZoomControlsEnabled = true;
+            googleMap.UiSettings.CompassEnabled = true;
 
-            builder.SetTitle("Logout?");
-            builder.SetMessage("Are you sure you want to log out of the app?\n(Go to the Login page after the logout.)");
-            builder.SetPositiveButton("OK", (c, ev) =>
+            getCurLocation(googleMap);
+
+                       
+        }
+
+        public async void getCurLocation(GoogleMap googleMap)
+        {
+            Console.WriteLine("Test - CurrentLoc");
+            try
             {
+                var request = new GeolocationRequest(GeolocationAccuracy.Medium);
+                var location = await Geolocation.GetLocationAsync(request);
 
-                Intent LoginActivity = new Intent(this, typeof(LoginActivity));
-                StartActivity(LoginActivity);
-                FinishAffinity();
+                if (location != null)
+                {
+                    Console.WriteLine($"current Loc - Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
+                    MarkerOptions curLoc = new MarkerOptions();
+                    curLoc.SetPosition(new LatLng(location.Latitude, location.Longitude));
+                    var address = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude);
+                    var placemark = address?.FirstOrDefault();
+                    var geocodeAddress = "";
+                    if (placemark != null)
+                    {
+                        geocodeAddress =
+                        $"AdminArea: {placemark.AdminArea}\n" +
+                        $"CountryCode: {placemark.CountryCode}\n" +
+                        $"CountryName: {placemark.CountryName}\n" +
+                        $"FeatureName: {placemark.FeatureName}\n" +
+                        $"Locality: {placemark.Locality}\n" +
+                        $"PostalCode: {placemark.PostalCode}\n" +
+                        $"SubAdminArea: {placemark.SubAdminArea}\n" +
+                        $"SubLocality: {placemark.SubLocality}\n" +
+                        $"SubThoroughfare: {placemark.SubThoroughfare}\n" +
+                        $"Thoroughfare: {placemark.Thoroughfare}\n";
 
-            });
-            builder.SetNegativeButton("Cancel", (c, ev) =>
+                    }
+                    curLoc.SetTitle("You are here" + geocodeAddress);
+                    curLoc.SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueAzure));
+
+                    googleMap.AddMarker(curLoc);
+
+                    CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
+                    builder.Target(new LatLng(location.Latitude, location.Longitude));
+                    builder.Zoom(20);
+                    builder.Tilt(65);
+
+                    CameraPosition cPos = builder.Build();
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.NewCameraPosition(cPos);
+                    googleMap.MoveCamera(cameraUpdate);
+
+
+
+
+
+                }
+                else
+                {
+                    OnMapReady(googleMap);
+                }
+            }
+            catch (FeatureNotSupportedException fnsEx)
             {
-                builder.Dispose();  
-            });
-            builder.Create().Show();
+                // Handle not supported on device exception
+                // Toast.MakeText(Activity"Feature Not Supported", ToastLength.Short);
+            }
+            catch (FeatureNotEnabledException fneEx)
+            {
+                // Handle not enabled on device exception
+                // Toast.MakeText(Activity, "Feature Not Enabled", ToastLength.Short);
+            }
+            catch (PermissionException pEx)
+            {
+                // Handle permission exception
+                // Toast.MakeText(Activity, "Needs more permission", ToastLength.Short);
+            }
+            catch (Exception ex)
+            {
+                OnMapReady(googleMap);
+            }
         }
     }
 }

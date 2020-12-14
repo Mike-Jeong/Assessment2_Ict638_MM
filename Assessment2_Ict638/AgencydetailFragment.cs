@@ -19,20 +19,27 @@ namespace Assessment2_Ict638
     public class AgencydetailFragment : Fragment, IOnMapReadyCallback
     {
         GoogleMap gMap;
-        LatLng curLocation;
-       
-        string An;
-        string Ap;
-        string Am;
-        string Al;
+        List<Data> houses;
+        List<Agency> agencies;
+        string uname;
+        string uphone;
+        string hlocation;
+        
 
-
-        public AgencydetailFragment(string agencyname, string agencyphonenumber, string agencyemail, string agencylocation)
+     
+        public AgencydetailFragment(List<Agency> A, List<Data> H, string username, string userphone, string location)
         {
-            An = agencyname; Ap = agencyphonenumber; Am = agencyemail; Al = agencylocation;
+
+            houses = H;
+            agencies = A;
+            uname = username;
+            uphone = userphone;
+            hlocation = location;
+
 
         }
 
+       
 
 
         public override void OnCreate(Bundle savedInstanceState)
@@ -47,15 +54,15 @@ namespace Assessment2_Ict638
             // Use this to return your custom view for this Fragment
             View v = inflater.Inflate(Resource.Layout.fragment_agencydetail, container, false);
 
-            TextView Name = v.FindViewById<EditText>(Resource.Id.Aname);
-            TextView Phonenumber = v.FindViewById<EditText>(Resource.Id.APhonenumber);
-            TextView AEmail = v.FindViewById<EditText>(Resource.Id.Aemail);
-            TextView Alocation = v.FindViewById<EditText>(Resource.Id.Alocation);
+            TextView Name = v.FindViewById<TextView>(Resource.Id.Aname);
+            TextView Phonenumber = v.FindViewById<TextView>(Resource.Id.APhonenumber);
+            TextView AEmail = v.FindViewById<TextView>(Resource.Id.Aemail);
+            TextView Alocation = v.FindViewById<TextView>(Resource.Id.Alocation);
 
-            Name.Text = An;
-            Phonenumber.Text = Ap;
-            AEmail.Text = Am;
-            Alocation.Text = Al;
+            Name.Text = agencies[0].agencyname;
+            Phonenumber.Text = agencies[0].agencyphonenumber;
+            AEmail.Text = agencies[0].agencyemail;
+            Alocation.Text = agencies[0].agencylocation;
 
 
             var mapFrag = MapFragment.NewInstance();
@@ -68,19 +75,50 @@ namespace Assessment2_Ict638
 
             Button btnShare = v.FindViewById<Button>(Resource.Id.btnAShare);
             Button btnSMS = v.FindViewById<Button>(Resource.Id.btnASMS);
-            Button btnAhouses = v.FindViewById<Button>(Resource.Id.btnAhouses);
+            Button btnShow = v.FindViewById<Button>(Resource.Id.btnAShow);
 
             btnShare.Click += BtnShare_Click;
             btnSMS.Click += BtnSMS_Click;
-            btnAhouses.Click += BtnAhouses_Click;
+            btnShow.Click += BtnShow_Click; 
 
             return v;
         }
 
-        private void BtnAhouses_Click(object sender, EventArgs e)
+        private void BtnShow_Click(object sender, EventArgs e)
         {
-            getCurrentLoc(gMap);
+
+            markhouses(gMap);
+            
         }
+
+        public async void markhouses(GoogleMap googleMap)
+        {
+
+            for (int i = 0; i < houses.Count; i++)
+            {
+                if (agencies[0].agencyname == houses[i].agencyname)
+                {
+                    var location = (await Geocoding.GetLocationsAsync(string.Format("$\"{0}\"", houses[i].location))).FirstOrDefault();
+
+                    if (location == null) return;
+                    LatLng loc = new LatLng(location.Latitude, location.Longitude);
+
+
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.SetPosition(loc);
+                    markerOptions.SetTitle(string.Format("{0}", houses[i].heading));
+
+                    googleMap.AddMarker(markerOptions);
+                }
+              
+
+            }
+
+
+           
+        }
+
+
 
         private async void BtnSMS_Click(object sender, EventArgs e)
         {
@@ -89,8 +127,8 @@ namespace Assessment2_Ict638
 
             try
             {
-                string text = " ";
-                string recipient = "0211231234";
+                string text = "Hi, I am" + uname + "saw your details on the Rent-a-go app. Could you please send me details of more houses for rent in the same price range?";
+                string recipient = agencies[0].agencyphonenumber;
                 var message = new SmsMessage(text, new[] { recipient });
                 await Sms.ComposeAsync(message);
             }
@@ -101,9 +139,9 @@ namespace Assessment2_Ict638
         }
         private async void BtnShare_Click(object sender, EventArgs e)
         {
-            string locDetails = "";
-            locDetails += "Latitude: " + curLocation.Latitude + "\nLongtitude" + curLocation.Longitude;
-            await ShareText(locDetails);
+            string ADetails = "";
+            ADetails = agencies[0].agencyname +agencies[0].agencyemail +agencies[0].agencyphonenumber +agencies[0].agencylocation ;
+            await ShareText(ADetails);
         }
 
         public async Task ShareText(string text)
@@ -111,7 +149,7 @@ namespace Assessment2_Ict638
             await Share.RequestAsync(new ShareTextRequest
             {
                 Text = text,
-                Title = "Location Share"
+                Title = "Agent detail Share"
             }
             );
         }
@@ -119,59 +157,55 @@ namespace Assessment2_Ict638
 
         public void OnMapReady(GoogleMap googleMap)
         {
+           
             googleMap.MapType = GoogleMap.MapTypeNormal;
             googleMap.UiSettings.ZoomControlsEnabled = true;
             googleMap.UiSettings.CompassEnabled = true;
+            
 
-            LatLng loc = new LatLng(-36.84966, 174.76526);
-            CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
-            builder.Target(loc);
-            builder.Zoom(20);
-            builder.Tilt(65);
 
-            CameraPosition cPos = builder.Build();
-            CameraUpdate cameraUpdate = CameraUpdateFactory.NewCameraPosition(cPos);
-            googleMap.MoveCamera(cameraUpdate);
 
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.SetPosition(loc);
-            markerOptions.SetTitle("NZSE City Campus");
+            getAgencyLocation(googleMap);
+            gMap = googleMap;
 
-            googleMap.AddMarker(markerOptions);
+
+            
         }
 
-        public async void getLastLocation(GoogleMap googleMap)
+        public async void getAgencyLocation(GoogleMap googleMap)
         {
             Console.WriteLine("Test - LastLoc");
             try
             {
-                var location = await Geolocation.GetLastKnownLocationAsync();
+
+                var address = agencies[0].agencylocation;
+                var locations = await Geocoding.GetLocationsAsync(address);
+                var location = locations?.FirstOrDefault();
+
                 if (location != null)
                 {
-                    Console.WriteLine($"Last Loc - Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
-                    MarkerOptions curLoc = new MarkerOptions();
-                    curLoc.SetPosition(new LatLng(location.Latitude, location.Longitude));
-                    var address = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude);
-                    var placemark = address?.FirstOrDefault();
-                    var geocodeAddress = "";
-                    if (placemark != null)
-                    {
-                        geocodeAddress =
-                        $"AdminArea: {placemark.AdminArea}\n" +
-                        $"CountryCode: {placemark.CountryCode}\n" +
-                        $"CountryName: {placemark.CountryName}\n" +
-                        $"FeatureName: {placemark.FeatureName}\n" +
-                        $"Locality: {placemark.Locality}\n" +
-                        $"PostalCode: {placemark.PostalCode}\n" +
-                        $"SubAdminArea: {placemark.SubAdminArea}\n" +
-                        $"SubLocality: {placemark.SubLocality}\n" +
-                        $"SubThoroughfare: {placemark.SubThoroughfare}\n" +
-                        $"Thoroughfare: {placemark.Thoroughfare}\n";
+                    Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}");
+                    CameraPosition.Builder builder = CameraPosition.InvokeBuilder();
+                    builder.Target(new LatLng(location.Latitude, location.Longitude));
+                    builder.Zoom(20);
+                    builder.Bearing(155);
+                    builder.Tilt(80);
 
-                    }
-                    curLoc.SetTitle("You were here" + geocodeAddress);
-                    curLoc.SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueAzure));
-                    googleMap.AddMarker(curLoc);
+                    CameraPosition cameraPosition = builder.Build();
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.NewCameraPosition(cameraPosition);
+
+                    gMap.MoveCamera(cameraUpdate);
+
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.SetPosition(new LatLng(location.Latitude, location.Longitude));
+                    markerOptions.SetTitle(agencies[0].agencyname);
+                    markerOptions.SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueGreen));
+
+
+                    googleMap.AddMarker(markerOptions);
+
+                   
+
                 }
             }
             catch (FeatureNotSupportedException fnsEx)
@@ -179,86 +213,16 @@ namespace Assessment2_Ict638
                 // Handle not supported on device exception
                 Toast.MakeText(Activity, "Feature Not Supported", ToastLength.Short);
             }
-            catch (FeatureNotEnabledException fneEx)
-            {
-                // Handle not enabled on device exception
-                Toast.MakeText(Activity, "Feature Not Enabled", ToastLength.Short);
-            }
-            catch (PermissionException pEx)
-            {
-                // Handle permission exception
-                Toast.MakeText(Activity, "Needs more permission", ToastLength.Short);
-            }
+           
             catch (Exception ex)
             {
                 // Unable to get location
                 Toast.MakeText(Activity, "Unable to get location", ToastLength.Short);
             }
+
         }
 
-        public async void getCurrentLoc(GoogleMap googleMap)
-        {
-            Console.WriteLine("Test - CurrentLoc");
-            try
-            {
-                var request = new GeolocationRequest(GeolocationAccuracy.Medium);
-                var location = await Geolocation.GetLocationAsync(request);
-
-                if (location != null)
-                {
-                    Console.WriteLine($"current Loc - Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
-                    MarkerOptions curLoc = new MarkerOptions();
-                    curLoc.SetPosition(new LatLng(location.Latitude, location.Longitude));
-                    var address = await Geocoding.GetPlacemarksAsync(location.Latitude, location.Longitude);
-                    var placemark = address?.FirstOrDefault();
-                    var geocodeAddress = "";
-                    if (placemark != null)
-                    {
-                        geocodeAddress =
-                        $"AdminArea: {placemark.AdminArea}\n" +
-                        $"CountryCode: {placemark.CountryCode}\n" +
-                        $"CountryName: {placemark.CountryName}\n" +
-                        $"FeatureName: {placemark.FeatureName}\n" +
-                        $"Locality: {placemark.Locality}\n" +
-                        $"PostalCode: {placemark.PostalCode}\n" +
-                        $"SubAdminArea: {placemark.SubAdminArea}\n" +
-                        $"SubLocality: {placemark.SubLocality}\n" +
-                        $"SubThoroughfare: {placemark.SubThoroughfare}\n" +
-                        $"Thoroughfare: {placemark.Thoroughfare}\n";
-
-                    }
-                    curLoc.SetTitle("You are here" + geocodeAddress);
-                    curLoc.SetIcon(BitmapDescriptorFactory.DefaultMarker(BitmapDescriptorFactory.HueAzure));
-
-                    googleMap.AddMarker(curLoc);
-
-                }
-                else
-                {
-                    getLastLocation(googleMap);
-                }
-            }
-            catch (FeatureNotSupportedException fnsEx)
-            {
-                // Handle not supported on device exception
-                Toast.MakeText(Activity, "Feature Not Supported", ToastLength.Short);
-            }
-            catch (FeatureNotEnabledException fneEx)
-            {
-                // Handle not enabled on device exception
-                Toast.MakeText(Activity, "Feature Not Enabled", ToastLength.Short);
-            }
-            catch (PermissionException pEx)
-            {
-                // Handle permission exception
-                Toast.MakeText(Activity, "Needs more permission", ToastLength.Short);
-            }
-            catch (Exception ex)
-            {
-                getLastLocation(googleMap);
-            }
-        }
-
+       
 
     }
 }
